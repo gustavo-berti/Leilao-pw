@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,6 @@ import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.services.PersonService;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/api/people")
@@ -40,7 +40,7 @@ public class PersonController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathParam("id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         personService.delete(id);
         return ResponseEntity.ok("Person deleted successfully");
     }
