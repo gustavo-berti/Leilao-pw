@@ -1,13 +1,13 @@
 package com.github.gustavo_berti.back_end.services;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.repositories.PersonRepository;
 
@@ -41,7 +41,7 @@ public class PersonService {
 
     public Person findById(Long id) {
         return personRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException(messageSource.getMessage("{person.notfound}",
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound",
                         new Object[] { id }, LocaleContextHolder.getLocale())));
     }
 }
