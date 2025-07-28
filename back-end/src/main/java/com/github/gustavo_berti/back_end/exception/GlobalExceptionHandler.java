@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NotFoundException.class)
+    @ExceptionHandler(BussinesException.class)
     public ResponseEntity<ErrorResponse> bussinesException(NotFoundException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
             HttpStatus.UNPROCESSABLE_ENTITY.value(), 
