@@ -1,13 +1,21 @@
 package com.github.gustavo_berti.back_end.models;
 
+import java.util.Date;
+
+import org.hibernate.annotations.ColumnDefault;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Entity
@@ -17,14 +25,36 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "{validation.name.notblank}")
+
+    @Column(name = "name", nullable = false)
+    @NotBlank(message = "Name cannot be blank")
+    @Size(max = 100, message = "Name must be at most 100 characters")
     private String name;
-    @NotBlank(message = "{validation.email.notblank}")
-    @Email(message = "{validation.email.invalid}")
+
+    @Column(name = "email", nullable = false, unique = true)
+    @NotBlank(message = "Email cannot be blank")
+    @Email(message = "Invalid email format")
+    @Size(max = 150, message = "Email must be at most 150 characters")
     private String email;
+
+    @Column(name = "password", nullable = false)
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
     private String password;
+
+    @Column(name = "validation_code")
     private String validationCode;
-    private boolean isActive;
+
+    @Column(name = "validation_code_expiry")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date validationCodeExpiry;
+
+    @Column(name = "active", nullable = false)
+    @ColumnDefault("true")
+    private boolean active;
+
     @Lob
+    @Column(name = "profile_picture")
     private byte[] profilePicture;
 }
+
