@@ -1,22 +1,28 @@
 package com.github.gustavo_berti.back_end.models;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 @Entity
 @Data
@@ -56,5 +62,17 @@ public class Person {
     @Lob
     @Column(name = "profile_picture")
     private byte[] profilePicture;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Setter(value = AccessLevel.NONE)
+    private List<PersonProfile> personProfile;
+
+    public void setPersonProfile(List<PersonProfile> personProfile){
+        for(PersonProfile p : personProfile){
+            p.setPerson(this);
+        }
+        this.personProfile = personProfile;
+    }
+
 }
 
