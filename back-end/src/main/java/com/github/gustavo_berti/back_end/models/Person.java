@@ -73,6 +73,11 @@ public class Person implements UserDetails {
     @Setter(value = AccessLevel.NONE)
     private List<Category> categories;
 
+    @Column(name = "person_auctions", nullable = true)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Setter(value = AccessLevel.NONE)
+    private List<Auction> auctions;
+
     @Column(name = "person_profile", nullable = false)
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Setter(value = AccessLevel.NONE)
