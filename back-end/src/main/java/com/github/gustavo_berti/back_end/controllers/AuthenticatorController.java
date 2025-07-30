@@ -1,0 +1,22 @@
+package com.github.gustavo_berti.back_end.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.gustavo_berti.back_end.dto.PersonRequestDTO;
+import com.github.gustavo_berti.back_end.services.AuthenticatorService;
+
+@RestController
+@RequestMapping("/autenticacao")
+public class AuthenticatorController {
+    @Autowired
+    private AuthenticatorService authenticatorService;
+
+    @PostMapping("/login")
+    public String login(@RequestBody PersonRequestDTO person){
+        return authenticatorService.auth(person);
+    }
+}

@@ -36,7 +36,7 @@ public class PersonController {
 
     @PutMapping
     public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
-        return ResponseEntity.ok(personService.insert(person));
+        return ResponseEntity.ok(personService.update(person));
     }
 
     @DeleteMapping("/{id}")

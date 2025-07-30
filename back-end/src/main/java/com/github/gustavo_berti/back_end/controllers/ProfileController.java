@@ -36,7 +36,7 @@ public class ProfileController {
 
     @PutMapping
     public ResponseEntity<Profile> update(@Valid @RequestBody Profile profile){
-        return ResponseEntity.ok(profileService.insert(profile));
+        return ResponseEntity.ok(profileService.update(profile));
     }
 
     @DeleteMapping("/{id}")

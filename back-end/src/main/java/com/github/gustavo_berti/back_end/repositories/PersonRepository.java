@@ -1,5 +1,7 @@
 package com.github.gustavo_berti.back_end.repositories;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +14,7 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
     
     @Query("from Person p where p.email =:email")
     public Page<Person> findByEmail(@Param("email") String email, Pageable pageable);
+
+    public Optional<Person> findByEmail(String email);
+
 }

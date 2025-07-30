@@ -5,6 +5,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -14,7 +18,7 @@ import com.github.gustavo_berti.back_end.repositories.PersonRepository;
 import com.github.gustavo_berti.utils.Const;
 
 @Service
-public class PersonService {
+public class PersonService implements UserDetailsService{
     @Autowired
     private PersonRepository personRepository;
     @Autowired
@@ -30,6 +34,7 @@ public class PersonService {
 
     public Person insert(Person person) {
         Person newPerson = personRepository.save(person);
+        newPerson.setPassword(EncryptPassword(person.getPassword()));
         sendSuccessEmail(newPerson);
         return newPerson;
     }
@@ -54,5 +59,15 @@ public class PersonService {
         return personRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound",
                         new Object[] { id }, LocaleContextHolder.getLocale())));
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return personRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("Pessoa não encontrada"));
+    }
+
+    private String EncryptPassword(String password) {
+        BCryptPasswordEncoder encode = new BCryptPasswordEncoder();
+        return encode.encode(password);
     }
 }

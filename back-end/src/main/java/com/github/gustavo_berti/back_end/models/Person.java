@@ -1,9 +1,14 @@
 package com.github.gustavo_berti.back_end.models;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,7 +32,7 @@ import lombok.Setter;
 @Entity
 @Data
 @Table(name = "people")
-public class Person {
+public class Person implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -72,6 +77,16 @@ public class Person {
             p.setPerson(this);
         }
         this.personProfile = personProfile;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return personProfile.stream().map(user -> new SimpleGrantedAuthority(user.getProfile().getType().name())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
 }
