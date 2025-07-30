@@ -38,19 +38,19 @@ public class Person implements UserDetails {
     private Long id;
 
     @Column(name = "name", nullable = false)
-    @NotBlank(message = "Name cannot be blank")
-    @Size(max = 100, message = "Name must be at most 100 characters")
+    @NotBlank(message = "Nome não pode ficar em branco")
+    @Size(max = 150, message = "Nome deve ter no máximo 150 caracteres")
     private String name;
 
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank(message = "Email cannot be blank")
-    @Email(message = "Invalid email format")
-    @Size(max = 150, message = "Email must be at most 150 characters")
+    @NotBlank(message = "Email não pode ficar em branco")
+    @Email(message = "Formato de email inválido")
+    @Size(max = 150, message = "Email deve ter no máximo 150 caracteres")
     private String email;
 
     @Column(name = "password", nullable = false)
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 8, max = 100, message = "Password must be between 8 and 100 characters")
+    @NotBlank(message = "Senha não pode ficar em branco")
+    @Size(min = 6, max = 100, message = "Senha deve ter entre 6 e 100 caracteres")
     private String password;
 
     @Column(name = "validation_code")
@@ -68,12 +68,18 @@ public class Person implements UserDetails {
     @Column(name = "profile_picture")
     private byte[] profilePicture;
 
+    @Column(name = "person_category", nullable = true)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Setter(value = AccessLevel.NONE)
+    private List<Category> categories;
+
+    @Column(name = "person_profile", nullable = false)
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Setter(value = AccessLevel.NONE)
     private List<PersonProfile> personProfile;
 
-    public void setPersonProfile(List<PersonProfile> personProfile){
-        for(PersonProfile p : personProfile){
+    public void setPersonProfile(List<PersonProfile> personProfile) {
+        for (PersonProfile p : personProfile) {
             p.setPerson(this);
         }
         this.personProfile = personProfile;
@@ -81,7 +87,8 @@ public class Person implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return personProfile.stream().map(user -> new SimpleGrantedAuthority(user.getProfile().getType().name())).collect(Collectors.toList());
+        return personProfile.stream().map(user -> new SimpleGrantedAuthority(user.getProfile().getType().name()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -90,4 +97,3 @@ public class Person implements UserDetails {
     }
 
 }
-

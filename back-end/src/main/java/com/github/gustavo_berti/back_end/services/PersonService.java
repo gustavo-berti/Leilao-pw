@@ -33,8 +33,8 @@ public class PersonService implements UserDetailsService{
     }
 
     public Person insert(Person person) {
+        person.setPassword(EncryptPassword(person.getPassword()));
         Person newPerson = personRepository.save(person);
-        newPerson.setPassword(EncryptPassword(person.getPassword()));
         sendSuccessEmail(newPerson);
         return newPerson;
     }
@@ -51,8 +51,8 @@ public class PersonService implements UserDetailsService{
         personRepository.delete(person);
     }
 
-    public Page<Person> findAll(Pageable page) {
-        return personRepository.findAll(page);
+    public Page<Person> findAll(Pageable pageable) {
+        return personRepository.findAll(pageable);
     }
 
     public Person findById(Long id) {
