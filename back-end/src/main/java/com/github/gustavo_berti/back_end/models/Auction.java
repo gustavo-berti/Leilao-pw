@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.github.gustavo_berti.back_end.models.enums.AuctionStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -61,16 +63,18 @@ public class Auction {
     @Column(name="minimal_bid", nullable = false)
     @NotNull(message = "Valor mínimo não pode ficar em branco")
     private Double minimalBid;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    @OneToOne
+    @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", nullable = true)
     private Payment payment;
-    @OneToMany
-    @JoinColumn(name = "image_id", nullable = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "bid_id", nullable = true)
+    private List<Bid> bids;
 }
