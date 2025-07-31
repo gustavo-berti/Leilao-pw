@@ -1,6 +1,7 @@
 package com.github.gustavo_berti.back_end.models;
 
 import java.util.Date;
+import java.util.List;
 
 import com.github.gustavo_berti.back_end.models.enums.AuctionStatus;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -48,7 +50,7 @@ public class Auction {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateHourEnd;
     @Column(name="status", nullable = false)
-    @NotBlank(message = "Status não pode ficar em branco")
+    @NotNull(message = "Status não pode ficar em branco")
     private AuctionStatus status;
     @Column(name = "observations", nullable = true)
     @Size(max = 500, message = "Observações devem ter no máximo 500 caracteres")
@@ -62,10 +64,13 @@ public class Auction {
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
-    @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "payment_id", nullable = true)
     private Payment payment;
+    @OneToMany
+    @JoinColumn(name = "image_id", nullable = true)
+    private List<Image> images;
 }
