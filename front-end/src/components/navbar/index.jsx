@@ -29,12 +29,13 @@ const Navbar = () => {
           end={
             <>
               <Button
+                id='login-button'
                 label="Entrar"
                 icon="pi pi-user"
                 className="p-button-text"
                 onClick={(e) => loginPanel.current.toggle(e)}
               />
-              <OverlayPanel ref={loginPanel}>
+              <OverlayPanel ref={loginPanel} className="login-popup">
                 {<LoginForm onLogin={handleLoginSuccess} position={loginPanel.current} />}
               </OverlayPanel>
             </>

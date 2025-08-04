@@ -5,8 +5,9 @@
     border-radius: 15px;
     justify-self: center;
     justify-content: center;
-    height: 100vh;
+    max-height: calc(100vh - 80px);
     width: 25vw;
+    min-width: 300px;
     padding: 1em;
     background-color: vars.$primary-color;
     border: 1px solid darken($color: vars.$secondary-color, $amount: 10%);

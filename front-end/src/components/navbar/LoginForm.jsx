@@ -10,7 +10,7 @@ const LoginForm = ({ onLogin }) => {
 
     return (
         <>
-            <div className="login-popup">
+            <div>
                 <h3>Entrar</h3>
                 <form onSubmit={handleLogin}>
                     <div className="field">
