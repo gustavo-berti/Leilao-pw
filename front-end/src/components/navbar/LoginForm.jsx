@@ -1,8 +1,45 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { personSchema } from '../../schemas/personSchema';
 
 const LoginForm = ({ onLogin }) => {
+    const [errors, setErrors] = useState({});
+    const [formData, setFormData] = useState({
+        email: '',
+        password: ''
+    });
+
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [field]: value
+        }));
+
+        if (errors[field]) {
+            setErrors(prev => ({
+                ...prev,
+                [field]: null
+            }));
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setErrors({});
+        try {
+            await personSchema.validate(formData, { abortEarly: false });
+            console.log('Form submitted successfully:', formData);
+            window.location.href = '/';
+        } catch (validationErrors) {
+            const formattedErrors = {};
+            validationErrors.inner.forEach(error => {
+                formattedErrors[error.path] = error.message;
+            });
+            setErrors(formattedErrors);
+        }
+    };
+
     const handleLogin = (e) => {
         e.preventDefault();
         onLogin();
@@ -17,6 +54,8 @@ const LoginForm = ({ onLogin }) => {
                         <InputText
                             placeholder="Email"
                             type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange("email", e.target.value)}
                             required
                         />
                     </div>
@@ -24,14 +63,18 @@ const LoginForm = ({ onLogin }) => {
                         <InputText
                             placeholder="Senha"
                             type="password"
+                            value={formData.password}
+                            onChange={(e) => handleInputChange("password", e.target.value)}
                             required
                         />
                     </div>
+                    {errors.loginInvalid && <small className='p-error'>{errors.loginInvalid}</small>}
                     <div className="field">
                         <Button
                             label="Entrar"
                             type="submit"
                             className="w-full"
+                            onClick={(handleSubmit)}
                         />
                     </div>
                     <div className="field">

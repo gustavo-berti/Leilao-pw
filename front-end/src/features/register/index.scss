@@ -10,7 +10,7 @@
     min-width: 300px;
     padding: 1em;
     background-color: vars.$primary-color;
-    border: 1px solid darken($color: vars.$secondary-color, $amount: 10%);
+    border: 1px solid darken(vars.$secondary-color, 10%);
 }
 
 .p-field{
