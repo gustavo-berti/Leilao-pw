@@ -21,16 +21,12 @@
                     background-color: vars.$secondary-color;
                 }
 
-                .p-menuitem-text,
                 .p-menuitem-icon {
-                    color: inherit;
+                    color: vars.$tertiary-color;
                 }
-            }
 
-            &.p-menuitem-active {
-                .p-menuitem-link {
-                    background-color: vars.$secondary-color;
-                    color: white;
+                .p-menuitem-text {
+                    color: inherit;
                 }
             }
         }
@@ -44,7 +40,11 @@
     border-radius: 4px;
     transition: background-color 0.3s ease;
 
-    .p-button-icon,
+    .p-button-icon {
+        color: vars.$tertiary-color;
+        margin-right: 10px;
+    }
+
     .p-button-text {
         color: vars.$text-primary-color;
     }
@@ -57,7 +57,47 @@
     &:hover {
         background-color: vars.$secondary-color;
     }
+
     &.p-button-active {
         background-color: vars.$secondary-color;
+    }
+}
+
+.login-popup {
+    margin-top: 10px;
+    background-color: vars.$secondary-color;
+    padding: 2em;
+    border-radius: 8px;
+    box-shadow: vars.$box-shadow;
+    width: 300px;
+    font-size: smaller;
+
+    h3 {
+        margin-bottom: 1em;
+        color: vars.$text-primary-color;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        .p-inputtext {
+            margin-bottom: 1em;
+            width: 100%;
+            height: 2em;
+        }
+
+        .p-button {
+            width: 100%;
+        }
+    }
+
+    .p-button {
+        background-color: vars.$tertiary-color;
+        color: vars.$primary-color;
+
+        &:hover {
+            background-color: darken(vars.$tertiary-color, 10%);
+        }
     }
 }
