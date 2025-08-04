@@ -1,14 +1,16 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Login from './features/login/index.jsx'
+import Home from './features/home/index.jsx'
+import * as Components from './components/index.jsx'
 
 function App() {
 
   return (
     <>
       <BrowserRouter>
+        <Components.Navbar />
         <Routes>
-          <Route path="/" element={<Login />} />
+          <Route path="/" element={<Home />} />
         </Routes>
       </BrowserRouter>
     </>
