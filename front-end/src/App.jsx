@@ -1,6 +1,5 @@
-import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './features/home/index.jsx'
+import * as Pages from './features/index.jsx'
 import * as Components from './components/index.jsx'
 
 function App() {
@@ -10,7 +9,8 @@ function App() {
       <BrowserRouter>
         <Components.Navbar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Pages.Home />} />
+          <Route path="/registrar" element={<Pages.Register />} />
         </Routes>
       </BrowserRouter>
     </>

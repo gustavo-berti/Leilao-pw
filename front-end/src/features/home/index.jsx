@@ -1,7 +1,7 @@
 import * as Components from '../../components/index.jsx';
 import './index.scss';
 
-const Login = () => {
+const Home = () => {
     return (
         <>
 
@@ -9,4 +9,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default Home;
