@@ -63,6 +63,7 @@ public class Auction {
     @Column(name="minimal_bid", nullable = false)
     @NotNull(message = "Valor mínimo não pode ficar em branco")
     private Double minimalBid;
+
     @ManyToOne()
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
