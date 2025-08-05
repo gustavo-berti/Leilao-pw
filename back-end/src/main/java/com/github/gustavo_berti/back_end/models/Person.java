@@ -69,7 +69,7 @@ public class Person implements UserDetails {
     private byte[] profilePicture;
 
     @Column(name = "person_category", nullable = true)
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Setter(value = AccessLevel.NONE)
     private List<Category> categories;
 

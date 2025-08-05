@@ -26,8 +26,6 @@ public class AuctionService {
         Auction existingAuction = findById(auction.getId());
         existingAuction.setTitle(auction.getTitle());
         existingAuction.setDescription(auction.getDescription());
-        existingAuction.setDateHourStart(auction.getDateHourStart());
-        existingAuction.setDateHourEnd(auction.getDateHourEnd());
         existingAuction.setStatus(auction.getStatus());
         existingAuction.setObservations(auction.getObservations());
         return auctionRepository.save(existingAuction);
