@@ -29,6 +29,13 @@ const Navbar = () => {
           end={
             <>
               <Button
+                id="register-button"
+                label="Registrar"
+                icon="pi pi-user-plus"
+                className="p-button-text"
+                onClick={(e) => window.location.href = '/registrar'}
+              />
+              <Button
                 id='login-button'
                 label="Entrar"
                 icon="pi pi-user"

@@ -81,9 +81,6 @@ const LoginForm = ({ onLogin }) => {
                     <div className="field">
                         <a href="/recuperar-senha" className="p-link">Esqueci minha senha</a>
                     </div>
-                    <div className="field">
-                        Não tem uma conta? <a href="/registrar" className="p-link">Registrar</a>
-                    </div>
                 </form>
             </div>
         </>
