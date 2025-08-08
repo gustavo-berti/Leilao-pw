@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { personSchema } from '../../schemas/personSchema';
+import ShortContainer from '../../components/shortContainer';
 import './index.scss';
 
 const Register = () => {
@@ -45,7 +46,7 @@ const Register = () => {
 
     return (
         <>
-            <div className="register-container">
+            <ShortContainer>
                 <h3>Nova Conta</h3>
                 <form className="register-form">
                     <div className="p-field">
@@ -73,7 +74,7 @@ const Register = () => {
                         <Button label="Cancelar" className="p-button-secondary" style={{ marginLeft: '10px' }} />
                     </div>
                 </form>
-            </div>
+            </ShortContainer>
         </>
     );
 }
