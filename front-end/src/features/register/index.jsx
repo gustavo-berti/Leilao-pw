@@ -33,7 +33,6 @@ const Register = () => {
         setErrors({});
         try {
             await personSchema.validate(formData, { abortEarly: false });
-            console.log('Form submitted successfully:', formData);
             window.location.href = '/';
         } catch (validationErrors) {
             const formattedErrors = {};

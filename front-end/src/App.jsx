@@ -12,6 +12,7 @@ function App() {
           <Route path="/" element={<Pages.Home />} />
           <Route path="/registrar" element={<Pages.Register />} />
           <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
+          <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
         </Routes>
       </BrowserRouter>
     </>

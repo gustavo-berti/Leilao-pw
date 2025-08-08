@@ -12,7 +12,6 @@ const RecoverPassword = () => {
         e.preventDefault();
         
         try {
-            console.log('Recovering password for:', email);
             setMessage('Email de recuperação enviado com sucesso!');
         } catch (error) {
             setMessage('Erro ao enviar email de recuperação.');
@@ -54,7 +53,6 @@ const RecoverPassword = () => {
                     <Button 
                         label="Voltar" 
                         className="p-button-secondary" 
-                        style={{ marginLeft: '10px' }}
                         type="button"
                         onClick={() => window.location.href = '/'}
                     />
