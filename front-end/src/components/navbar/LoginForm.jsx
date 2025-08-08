@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { personSchema } from '../../schemas/personSchema';
+import { loginSchema } from '../../schemas/loginSchema';
 
 const LoginForm = ({ onLogin }) => {
     const [errors, setErrors] = useState({});
@@ -28,7 +28,7 @@ const LoginForm = ({ onLogin }) => {
         e.preventDefault();
         setErrors({});
         try {
-            await personSchema.validate(formData, { abortEarly: false });
+            await loginSchema.validate(formData, { abortEarly: false });
             console.log('Form submitted successfully:', formData);
             window.location.href = '/';
         } catch (validationErrors) {
@@ -51,6 +51,7 @@ const LoginForm = ({ onLogin }) => {
                 <h3>Entrar</h3>
                 <form onSubmit={handleLogin}>
                     <div className="field">
+                        {errors.email && <small className='p-error'>{errors.email}</small>}
                         <InputText
                             placeholder="Email"
                             type="email"
@@ -60,6 +61,7 @@ const LoginForm = ({ onLogin }) => {
                         />
                     </div>
                     <div className="field">
+                        {errors.password && <small className='p-error'>{errors.password}</small>}
                         <InputText
                             placeholder="Senha"
                             type="password"
@@ -68,7 +70,6 @@ const LoginForm = ({ onLogin }) => {
                             required
                         />
                     </div>
-                    {errors.loginInvalid && <small className='p-error'>{errors.loginInvalid}</small>}
                     <div className="field">
                         <Button
                             label="Entrar"

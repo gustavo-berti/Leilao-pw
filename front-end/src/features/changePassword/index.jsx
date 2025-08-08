@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { ShortContainer } from '../../components'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
-import { personSchema } from '../../schemas/personSchema';
+import { changePasswordSchema } from '../../schemas/changePasswordSchema';
 
 const ChangePassword = () => {
     const [errors, setErrors] = useState({});
@@ -33,11 +33,7 @@ const ChangePassword = () => {
         setMessage('');
 
         try {
-            const validationData = {
-                password: formData.password,
-                confirmPassword: formData.confirmPassword
-            };
-            await personSchema.validate(validationData, { abortEarly: false });
+            await changePasswordSchema.validate(formData, { abortEarly: false });
             setMessage('Senha alterada com sucesso!');
             window.location.href = '/';
         } catch (validationErrors) {
