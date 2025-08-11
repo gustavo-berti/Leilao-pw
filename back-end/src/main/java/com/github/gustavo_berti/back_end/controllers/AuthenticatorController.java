@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.PersonAuthDTO;
 import com.github.gustavo_berti.back_end.dto.PersonRequestDTO;
 import com.github.gustavo_berti.back_end.services.AuthenticatorService;
 
@@ -16,7 +17,7 @@ public class AuthenticatorController {
     private AuthenticatorService authenticatorService;
 
     @PostMapping("/login")
-    public String login(@RequestBody PersonRequestDTO person){
+    public PersonAuthDTO login(@RequestBody PersonRequestDTO person){
         return authenticatorService.auth(person);
     }
 }

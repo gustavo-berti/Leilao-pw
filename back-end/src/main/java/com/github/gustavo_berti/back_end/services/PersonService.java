@@ -61,6 +61,12 @@ public class PersonService implements UserDetailsService{
                         new Object[] { id }, LocaleContextHolder.getLocale())));
     }
 
+    public Person findByEmail(String email) {
+        return personRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound.email",
+                        new Object[] { email }, LocaleContextHolder.getLocale())));
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return personRepository.findByEmail(username).orElseThrow(()-> new UsernameNotFoundException("Pessoa não encontrada"));
