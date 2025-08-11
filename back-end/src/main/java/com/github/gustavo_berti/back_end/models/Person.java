@@ -65,7 +65,7 @@ public class Person implements UserDetails {
     private boolean active;
 
     @Lob
-    @Column(name = "profile_picture")
+    @Column(name = "profile_picture", nullable = true)
     private byte[] profilePicture;
 
     @Column(name = "person_category", nullable = true)
