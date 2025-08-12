@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { loginSchema } from '../../schemas/loginSchema';
+import AuthService from '../../services/authService';
 
 const LoginForm = ({ onLogin }) => {
+    const navigate = useNavigate();
+    const authService = new AuthService();
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         email: '',
@@ -29,14 +33,23 @@ const LoginForm = ({ onLogin }) => {
         setErrors({});
         try {
             await loginSchema.validate(formData, { abortEarly: false });
-            console.log('Form submitted successfully:', formData);
-            window.location.href = '/';
         } catch (validationErrors) {
             const formattedErrors = {};
             validationErrors.inner.forEach(error => {
                 formattedErrors[error.path] = error.message;
             });
             setErrors(formattedErrors);
+        }
+        try {
+            const response = await authService.login(formData);
+            localStorage.setItem('user', JSON.stringify(response));
+            navigate('/');
+        } catch (error) {
+            const formattedError = {};
+            formattedError[error.name] = error.response.data.message;
+            console.log(error.response.data.message);
+            console.log(formattedError);
+            setErrors(formattedError);
         }
     };
 
@@ -71,6 +84,7 @@ const LoginForm = ({ onLogin }) => {
                         />
                     </div>
                     <div className="field">
+                        {errors.AxiosError && <small className='p-error'>{errors.AxiosError}</small>}
                         <Button
                             label="Entrar"
                             type="submit"
