@@ -43,7 +43,7 @@ const LoginForm = ({ onLogin }) => {
         try {
             const response = await authService.login(formData);
             localStorage.setItem('user', JSON.stringify(response));
-            navigate('/');
+            onLogin(response);
         } catch (error) {
             const formattedError = {};
             formattedError[error.name] = error.response.data.message;

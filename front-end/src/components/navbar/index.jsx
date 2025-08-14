@@ -18,8 +18,9 @@ const items = [
   const loginPanel = useRef(null);
   const perfilPanel = useRef(null);
 
-  const handleLoginSuccess = () => {
+  const handleLoginSuccess = (userData) => {
     loginPanel.current.hide();
+    setUser(userData);
   };
 
   const handleLogoutSuccess = () => {
