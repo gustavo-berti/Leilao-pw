@@ -40,7 +40,9 @@
     }
 }
 
-#login-button,#register-button {
+#login-button,
+#perfil-button,
+#register-button {
     padding: 1rem 1.5rem;
     color: vars.$text-primary-color;
     font-size: 1.2rem;
@@ -70,7 +72,7 @@
     }
 }
 
-.login-popup {
+.popup {
     margin-top: 10px;
     background-color: vars.$primary-color;
     padding: 2em;
@@ -102,11 +104,19 @@
     }
 
     .p-button {
+        width: 100%;
+        height: 2em;
         background-color: vars.$tertiary-color;
         color: vars.$primary-color;
+        display: flex;
+        flex-direction: row-reverse;
 
         &:hover {
             background-color: darken(vars.$tertiary-color, 10%);
+        }
+
+        .p-button-icon{
+            margin-right: 15px;
         }
     }
 }

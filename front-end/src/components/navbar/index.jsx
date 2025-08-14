@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef } from 'react';
 import LoginForm from './LoginForm';
+import PerfilPopup from './PerfilPopup';
 import './index.scss';
 
 const items = [
@@ -13,11 +14,18 @@ const items = [
   },
 ];
 
-const Navbar = () => {
+  const Navbar = ({ user, setUser }) => {
   const loginPanel = useRef(null);
+  const perfilPanel = useRef(null);
 
   const handleLoginSuccess = () => {
     loginPanel.current.hide();
+  };
+
+  const handleLogoutSuccess = () => {
+    perfilPanel.current.hide();
+    setUser(null);
+    localStorage.removeItem('user');
   };
 
   return (
@@ -26,8 +34,18 @@ const Navbar = () => {
         <Menubar
           className='navbar'
           model={items}
-          end={
-            <>
+          end={user ? (<>
+              <Button
+                id="perfil-button"
+                label="Perfil"
+                icon="pi pi-user"
+                className="p-button-text"
+                onClick={(e) => perfilPanel.current.toggle(e)}
+              />
+              <OverlayPanel ref={perfilPanel} className='popup'>
+                {<PerfilPopup user={user} onLogout={handleLogoutSuccess} />}
+              </OverlayPanel>
+            </>) : (<>
               <Button
                 id="register-button"
                 label="Registrar"
@@ -42,11 +60,11 @@ const Navbar = () => {
                 className="p-button-text"
                 onClick={(e) => loginPanel.current.toggle(e)}
               />
-              <OverlayPanel ref={loginPanel} className="login-popup">
+              <OverlayPanel ref={loginPanel} className="popup">
                 {<LoginForm onLogin={handleLoginSuccess} position={loginPanel.current} />}
               </OverlayPanel>
             </>
-          }
+          )}
         />
       </nav>
     </>
