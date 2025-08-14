@@ -23,7 +23,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-  
     private final JwtAuthenticatorFilter jwtRequestFilter;
 
     public SecurityConfig(JwtAuthenticatorFilter jwtRequestFilter) {
@@ -36,37 +35,44 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
-             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/autenticacao/**").permitAll()
-            .requestMatchers("/api/people/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/autenticacao/**").permitAll()
+                .requestMatchers("/api/people/**").hasRole("ADMIN")
+                .requestMatchers("/api/people/{id}").hasRole("USER")
+                .requestMatchers("/api/profiles/**").hasRole("ADMIN")
+                .requestMatchers("/api/auctions/**").hasRole("USER")
+                .requestMatchers("/api/bids/**").hasRole("USER")
+                .requestMatchers("/api/categories/**").hasRole("USER")
+                .requestMatchers("/api/feedbacks/**").hasRole("USER")
+                .requestMatchers("/api/images/**").hasRole("USER")
+                .requestMatchers("/api/payment/**").hasRole("USER")
+                .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-        @Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type")); 
-        configuration.setAllowCredentials(true); 
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); 
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }

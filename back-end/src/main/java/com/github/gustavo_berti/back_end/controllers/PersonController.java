@@ -34,6 +34,18 @@ public class PersonController {
         return ResponseEntity.ok(personService.insert(person));
     }
 
+    @PostMapping("/recover-password/generate")
+    public ResponseEntity<String> recoverPassword(@RequestBody String email) {
+        personService.recoverPassword(email);
+        return ResponseEntity.ok("Email de recuperação enviado com sucesso");
+    }
+
+    @PostMapping("/recover-password/validate")
+    public ResponseEntity<String> validateRecoverPassword(@RequestBody String token) {
+        personService.validateRecoverPassword(token);
+        return ResponseEntity.ok("Token de recuperação válido");
+    }
+
     @PutMapping
     public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
         return ResponseEntity.ok(personService.update(person));
