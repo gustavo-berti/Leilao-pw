@@ -94,9 +94,9 @@ public class PersonService implements UserDetailsService {
                 .setSubject(person.getEmail())
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact();
-        String resetLink = "http://localhost:8080/recuperar-senha?token=" + token;
+        String resetLink = "http://localhost:5173/recuperar-senha?token=" + token;
         Context context = new Context();
         context.setVariable("name", person.getName());
         context.setVariable("resetLink", resetLink);
