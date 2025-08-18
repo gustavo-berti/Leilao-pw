@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.ChangePasswordDTO;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.services.PersonService;
 
@@ -37,6 +38,11 @@ public class PersonController {
     @PutMapping
     public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
         return ResponseEntity.ok(personService.update(person));
+    }
+
+    @PutMapping("/change-password")
+    public ResponseEntity<Person> changePassword(@Valid @RequestBody ChangePasswordDTO dto) {
+        return ResponseEntity.ok(personService.changePassword(dto.getEmail(), dto.getNewPassword()));
     }
 
     @DeleteMapping("/{id}")

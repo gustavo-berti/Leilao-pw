@@ -3,8 +3,12 @@ import { ShortContainer } from '../../components'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { changePasswordSchema } from '../../schemas/changePasswordSchema';
+import { useNavigate } from 'react-router-dom';
+import personService from '../../services/personService';
 
 const ChangePassword = () => {
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem('user'));
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
     const [formData, setFormData] = useState({
@@ -35,7 +39,6 @@ const ChangePassword = () => {
         try {
             await changePasswordSchema.validate(formData, { abortEarly: false });
             setMessage('Senha alterada com sucesso!');
-            window.location.href = '/';
         } catch (validationErrors) {
             const formattedErrors = {};
             console.error('Validation errors:', validationErrors);
@@ -43,6 +46,13 @@ const ChangePassword = () => {
                 formattedErrors[error.path] = error.message;
             });
             setErrors(formattedErrors);
+        }
+        try {
+            await personService.changePassword(user.email, formData.password);
+            setMessage('Senha alterada com sucesso!');
+        } catch (error) {
+            console.error('Erro ao alterar senha:', error);
+            setMessage('Erro ao alterar senha');
         }
     };
     return (<>

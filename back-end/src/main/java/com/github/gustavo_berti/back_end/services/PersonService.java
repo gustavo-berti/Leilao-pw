@@ -46,6 +46,12 @@ public class PersonService implements UserDetailsService {
         return personRepository.save(existingPerson);
     }
 
+    public Person changePassword(String email, String newPassword) {
+        Person person = findByEmail(email);
+        person.setPassword(EncryptPassword(newPassword));
+        return personRepository.save(person);   
+    }
+
     public void delete(Long id) {
         Person person = findById(id);
         personRepository.delete(person);

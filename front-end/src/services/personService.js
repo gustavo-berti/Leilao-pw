@@ -14,11 +14,11 @@ class PersonService {
         }
     }
 
-    static async changePassword(email, password) {
+    static async changePassword(email, newPassword) {
         try {
-            const response = await api.put('/people', {
+            const response = await api.put('/people/change-password', {
                 email,
-                password
+                newPassword
             });
             return response.data;
         } catch (error) {
