@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -45,7 +46,7 @@ public class RecoverPasswordService {
         emailService.emailTemplate(person.getEmail(), "Recuperação de Senha", Const.templateRecoverPassword, context);
     }
 
-    public void validateRecoverPassword(String token) {
+    public String validateRecoverPassword(String token) {
         try {
             String email = Jwts.parser()
                     .setSigningKey(jwtSecret)
@@ -53,6 +54,7 @@ public class RecoverPasswordService {
                     .getBody()
                     .getSubject();
             findPersonByEmail(email);
+            return email;
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
             throw new RuntimeException("Token expirado");
         } catch (io.jsonwebtoken.JwtException e) {
@@ -64,5 +66,12 @@ public class RecoverPasswordService {
         return personRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound.email",
                         new Object[] { email }, LocaleContextHolder.getLocale())));
+    }
+
+    public void changePassword(String email, String newPassword) {
+        Person person = findPersonByEmail(email);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        person.setPassword(encoder.encode(newPassword));
+        personRepository.save(person);
     }
 }
