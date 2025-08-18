@@ -66,7 +66,7 @@ const RecoverPassword = () => {
             return;
         }
         try {
-            await personService.changePassword(token, password);
+            await personService.recoverPassword(email, password, token);
             console.log('Senha alterada com sucesso!');
         } catch (error) {
             console.error('Erro ao alterar senha:', error);
