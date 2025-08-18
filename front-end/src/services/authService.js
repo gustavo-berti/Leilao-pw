@@ -2,7 +2,7 @@ import BaseService from "./baseService";
 
 class AuthService extends BaseService {
     constructor(){
-        super('/autenticacao');
+        super('/auth');
     }
 
     async login(credentials){        

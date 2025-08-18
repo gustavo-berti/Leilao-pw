@@ -3,7 +3,7 @@ import api from '../config/axiosConfig';
 class tokenService {
     static async generate(email) {
         try {
-            const response = await api.post(`api/people/recover-password/generate/${email}`);
+            const response = await api.post(`/recover-password/generate/${email}`);
             return response.data;
         } catch (error) {
             return null;
@@ -12,7 +12,7 @@ class tokenService {
 
     static async isValid(token) {
         try {
-            const response = await api.post(`api/people/recover-password/validate/${token}`);
+            const response = await api.post(`/recover-password/validate/${token}`);
             return response;
         } catch (error) {
             return false;

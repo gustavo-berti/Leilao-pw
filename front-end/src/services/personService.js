@@ -3,7 +3,7 @@ import api from '../config/axiosConfig'
 class PersonService {
     static async changePassword(email, password) {
         try {
-            const response = await api.put('/api/people', {
+            const response = await api.put('/people', {
                 email,
                 password
             });

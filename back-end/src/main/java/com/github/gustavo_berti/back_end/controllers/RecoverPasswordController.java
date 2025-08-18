@@ -15,13 +15,13 @@ public class RecoverPasswordController {
     @Autowired
     private RecoverPasswordService recoverPasswordService;
 
-    @PostMapping("/recover-password/generate/{email}")
+    @PostMapping("/generate/{email}")
     public ResponseEntity<String> recoverPassword(@PathVariable("email") String email) {
         recoverPasswordService.recoverPassword(email);
         return ResponseEntity.ok("Email de recuperação enviado com sucesso");
     }
 
-    @PostMapping("/recover-password/validate/{token}")
+    @PostMapping("/validate/{token}")
     public ResponseEntity<String> validateRecoverPassword(@PathVariable("token") String token) {
         recoverPasswordService.validateRecoverPassword(token);
         return ResponseEntity.ok("Token de recuperação válido");
