@@ -11,7 +11,7 @@ import com.github.gustavo_berti.back_end.dto.PersonRequestDTO;
 import com.github.gustavo_berti.back_end.services.AuthenticatorService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthenticatorController {
     @Autowired
     private AuthenticatorService authenticatorService;
