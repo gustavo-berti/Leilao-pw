@@ -35,6 +35,12 @@ public class PersonController {
         return ResponseEntity.ok(personService.insert(person));
     }
 
+    @PostMapping("/validate-password")
+    public ResponseEntity<Boolean> validateCurrentPassword(@Valid @RequestBody ChangePasswordDTO dto) {
+        boolean isValid = personService.validateCurrentPassword(dto.getEmail(), dto.getNewPassword());
+        return ResponseEntity.ok(isValid);
+    }
+
     @PutMapping
     public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
         return ResponseEntity.ok(personService.update(person));

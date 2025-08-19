@@ -84,4 +84,10 @@ public class PersonService implements UserDetailsService {
         return encode.encode(password);
     }
 
+    public boolean validateCurrentPassword(String email, String currentPassword) {
+        Person person = findByEmail(email);
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder.matches(currentPassword, person.getPassword());
+    }    
+
 }

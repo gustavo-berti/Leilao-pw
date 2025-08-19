@@ -38,7 +38,6 @@ const ChangePassword = () => {
 
         try {
             await changePasswordSchema.validate(formData, { abortEarly: false });
-            setMessage('Senha alterada com sucesso!');
         } catch (validationErrors) {
             const formattedErrors = {};
             console.error('Validation errors:', validationErrors);
@@ -48,11 +47,15 @@ const ChangePassword = () => {
             setErrors(formattedErrors);
         }
         try {
+            const isValid = await personService.validateCurrentPassword(user.email, formData.currentPassword);
+            if (!isValid) {
+                setErrors(errors => ({ ...errors, currentPassword: 'Senha atual inválida' }));
+                return;
+            }
             await personService.changePassword(user.email, formData.password);
             setMessage('Senha alterada com sucesso!');
         } catch (error) {
             console.error('Erro ao alterar senha:', error);
-            setMessage('Erro ao alterar senha');
         }
     };
     return (<>
@@ -83,7 +86,7 @@ const ChangePassword = () => {
                 )}
                 <div className="p-field" id='buttons'>
                     <Button label="Alterar Senha" type='submit' className="p-button-success" />
-                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => window.location.href = '/'} />
+                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => navigate('/')} />
                 </div>
             </form>
         </ShortContainer>
