@@ -32,6 +32,12 @@ public class PersonService implements UserDetailsService {
         emailService.emailTemplate(person.getEmail(), "Cadastrado com Sucesso", Const.templateSuccessfulEmail, context);
     }
 
+    private void sendEmailChangePassword(Person person) {
+        Context context = new Context();
+        context.setVariable("name", person.getName());
+        emailService.emailTemplate(person.getEmail(), "Senha Alterada com Sucesso", Const.templateChangePasswordEmail, context);
+    }
+
     public Person insert(Person person) {
         person.setPassword(EncryptPassword(person.getPassword()));
         Person newPerson = personRepository.save(person);
@@ -49,6 +55,7 @@ public class PersonService implements UserDetailsService {
     public Person changePassword(String email, String newPassword) {
         Person person = findByEmail(email);
         person.setPassword(EncryptPassword(newPassword));
+        sendEmailChangePassword(person);
         return personRepository.save(person);   
     }
 
