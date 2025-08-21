@@ -51,7 +51,7 @@ const RecoverPassword = () => {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            await changePasswordSchema.validate({ password, confirmPassword });
+            await changePasswordSchema.validate({ password, confirmPassword }, {abortEarly: false});
             console.log('Senha alterada com sucesso!');
         } catch (validationErrors) {
             const formattedErrors = {};
@@ -62,7 +62,8 @@ const RecoverPassword = () => {
             } else if (validationErrors.path) {
                 formattedErrors[validationErrors.path] = validationErrors.message;
             }
-            setErrors(formattedErrors);
+            console.log('Validation errors:', formattedErrors);
+            setErrors(prevErrors => ({ ...prevErrors, ...formattedErrors }));
             return;
         }
         try {

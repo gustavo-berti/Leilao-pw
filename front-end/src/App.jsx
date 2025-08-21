@@ -20,7 +20,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Pages.Home />} />
           <Route path="/registrar" element={<Pages.Register />} />
-          <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
+          <Route element={<Components.PublicRouteLayout />}>
+            <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
+          </Route>
           <Route element={<Components.PrivateRouteLayout />}>
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
           </Route>
