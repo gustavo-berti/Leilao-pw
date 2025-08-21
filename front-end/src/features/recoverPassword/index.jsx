@@ -150,7 +150,7 @@ const RecoverPassword = () => {
                                 label="Voltar"
                                 className="p-button-secondary"
                                 type="button"
-                                onClick={() => window.location.href = '/'}
+                                onClick={() => navigate('/')}
                             />
                         </div>
                     </form>

@@ -4,8 +4,10 @@ import { Button } from 'primereact/button';
 import { personSchema } from '../../schemas/personSchema';
 import {ShortContainer} from '../../components';
 import './index.scss';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+    const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
         name: '',
@@ -33,7 +35,7 @@ const Register = () => {
         setErrors({});
         try {
             await personSchema.validate(formData, { abortEarly: false });
-            window.location.href = '/';
+            navigate('/');
         } catch (validationErrors) {
             const formattedErrors = {};
             validationErrors.inner.forEach(error => {

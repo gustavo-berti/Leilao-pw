@@ -5,16 +5,18 @@ import React, { useRef } from 'react';
 import LoginForm from './LoginForm';
 import PerfilPopup from './PerfilPopup';
 import './index.scss';
+import { useNavigate } from 'react-router-dom';
 
 const items = [
   {
     label: 'Início',
     icon: 'pi pi-fw pi-home',
-    command: () => { window.location.href = '/'; }
+    command: () => { navigate('/'); }
   },
 ];
 
   const Navbar = ({ user, setUser }) => {
+  const navigate = useNavigate();
   const loginPanel = useRef(null);
   const perfilPanel = useRef(null);
 
@@ -27,6 +29,7 @@ const items = [
     perfilPanel.current.hide();
     setUser(null);
     localStorage.removeItem('user');
+    navigate('/');
   };
 
   return (
@@ -52,7 +55,7 @@ const items = [
                 label="Registrar"
                 icon="pi pi-user-plus"
                 className="p-button-text"
-                onClick={(e) => window.location.href = '/registrar'}
+                onClick={(e) => navigate('/registrar')}
               />
               <Button
                 id='login-button'
