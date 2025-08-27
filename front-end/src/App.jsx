@@ -2,14 +2,24 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import * as Pages from './features/index.jsx'
 import * as Components from './components/index.jsx'
 import { useEffect, useState } from 'react';
+import AuthService from './services/authService.js';
 
 function App() {
+  const authService = new AuthService();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      authService.validateToken(JSON.parse(storedUser)).then(response => {
+        if (response) {
+          setUser(JSON.parse(storedUser));
+        } else {
+          localStorage.removeItem('user');
+          setUser(null);
+          alert('Sua sessão expirou. Por favor, faça login novamente.');
+        }
+      });
     }
   }, []);
 

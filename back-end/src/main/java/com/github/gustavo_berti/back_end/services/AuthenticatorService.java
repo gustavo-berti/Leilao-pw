@@ -35,4 +35,8 @@ public class AuthenticatorService {
         personAuthDTO.setToken(jwtService.generateToken(authentication.getName()));
         return personAuthDTO;
     }
+
+    public boolean validateToken(PersonAuthDTO personAuthDTO) {
+        return jwtService.validateToken(personAuthDTO.getToken(), personAuthDTO.getName());
+    }
 }

@@ -20,4 +20,10 @@ public class AuthenticatorController {
     public PersonAuthDTO login(@RequestBody PersonRequestDTO person){
         return authenticatorService.auth(person);
     }
+
+    @PostMapping("/validate")
+    public boolean validate(@RequestBody PersonAuthDTO personAuthDTO) {
+        return authenticatorService.validateToken(personAuthDTO);
+    }
+
 }
