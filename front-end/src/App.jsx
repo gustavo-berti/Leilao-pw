@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import * as Pages from './features/index.jsx'
+import * as Layouts from './routes/index.jsx'
 import * as Components from './components/index.jsx'
 import { useEffect, useState } from 'react';
 import AuthService from './services/authService.js';
@@ -30,11 +31,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Pages.Home />} />
           <Route path="/registrar" element={<Pages.Register />} />
-          <Route element={<Components.PublicRouteLayout />}>
+          <Route element={<Layouts.PublicRoute />}>
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
           </Route>
-          <Route element={<Components.PrivateRouteLayout />}>
+          <Route element={<Layouts.PrivateRoute />}>
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
+          </Route>
+          <Route element={<Layouts.PrivateRoute />}>
+            <Route path="/admin" element={<Pages.Admin />} />
           </Route>
         </Routes>
       </BrowserRouter>
