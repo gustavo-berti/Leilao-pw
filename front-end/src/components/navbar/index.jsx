@@ -7,15 +7,7 @@ import PerfilPopup from './PerfilPopup';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
 
-const items = [
-  {
-    label: 'Início',
-    icon: 'pi pi-fw pi-home',
-    command: () => { navigate('/'); }
-  },
-];
-
-  const Navbar = ({ user, setUser }) => {
+const Navbar = ({ user, setUser }) => {
   const navigate = useNavigate();
   const loginPanel = useRef(null);
   const perfilPanel = useRef(null);
@@ -32,6 +24,14 @@ const items = [
     navigate('/');
   };
 
+  const items = [
+    {
+      label: 'Início',
+      icon: 'pi pi-fw pi-home',
+      command: () => { navigate('/'); }
+    },
+  ];
+
   return (
     <>
       <nav>
@@ -39,35 +39,35 @@ const items = [
           className='navbar'
           model={items}
           end={user ? (<>
-              <Button
-                id="perfil-button"
-                label="Perfil"
-                icon="pi pi-user"
-                className="p-button-text"
-                onClick={(e) => perfilPanel.current.toggle(e)}
-              />
-              <OverlayPanel ref={perfilPanel} className='popup'>
-                {<PerfilPopup user={user} onLogout={handleLogoutSuccess} />}
-              </OverlayPanel>
-            </>) : (<>
-              <Button
-                id="register-button"
-                label="Registrar"
-                icon="pi pi-user-plus"
-                className="p-button-text"
-                onClick={(e) => navigate('/registrar')}
-              />
-              <Button
-                id='login-button'
-                label="Entrar"
-                icon="pi pi-user"
-                className="p-button-text"
-                onClick={(e) => loginPanel.current.toggle(e)}
-              />
-              <OverlayPanel ref={loginPanel} className="popup">
-                {<LoginForm onLogin={handleLoginSuccess} position={loginPanel.current} />}
-              </OverlayPanel>
-            </>
+            <Button
+              id="perfil-button"
+              label="Perfil"
+              icon="pi pi-user"
+              className="p-button-text"
+              onClick={(e) => perfilPanel.current.toggle(e)}
+            />
+            <OverlayPanel ref={perfilPanel} className='popup'>
+              {<PerfilPopup user={user} onLogout={handleLogoutSuccess} />}
+            </OverlayPanel>
+          </>) : (<>
+            <Button
+              id="register-button"
+              label="Registrar"
+              icon="pi pi-user-plus"
+              className="p-button-text"
+              onClick={(e) => navigate('/registrar')}
+            />
+            <Button
+              id='login-button'
+              label="Entrar"
+              icon="pi pi-user"
+              className="p-button-text"
+              onClick={(e) => loginPanel.current.toggle(e)}
+            />
+            <OverlayPanel ref={loginPanel} className="popup">
+              {<LoginForm onLogin={handleLoginSuccess} position={loginPanel.current} />}
+            </OverlayPanel>
+          </>
           )}
         />
       </nav>

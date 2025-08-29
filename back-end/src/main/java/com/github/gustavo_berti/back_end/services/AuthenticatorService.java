@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.gustavo_berti.back_end.dto.PersonAuthDTO;
 import com.github.gustavo_berti.back_end.dto.PersonRequestDTO;
+import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.repositories.PersonRepository;
 
 @Service
@@ -27,12 +28,15 @@ public class AuthenticatorService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(person.getEmail(), person.getPassword()));
         PersonAuthDTO personAuthDTO = new PersonAuthDTO();
-        personAuthDTO.setName(personRepository.findByEmail(person.getEmail())
+        Person personEntity = personRepository.findByEmail(person.getEmail())
                 .orElseThrow(() -> new RuntimeException(messageSource.getMessage("person.notfound.email",
-                        new Object[] { person.getEmail() }, LocaleContextHolder.getLocale())))
-                .getName());
+                        new Object[] { person.getEmail() }, LocaleContextHolder.getLocale())));
+        personAuthDTO.setName(personEntity.getName());
         personAuthDTO.setEmail(person.getEmail());
         personAuthDTO.setToken(jwtService.generateToken(authentication.getName()));
+        personAuthDTO.setRole(personEntity.getPersonProfile() != null && !personEntity.getPersonProfile().isEmpty()
+                ? personEntity.getPersonProfile().get(0).getProfile().getType().name()
+                : null);
         return personAuthDTO;
     }
 
