@@ -5,7 +5,7 @@ import { ShortContainer } from '../../components';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { changePasswordSchema } from '../../schemas/changePasswordSchema';
 import tokenService from '../../services/tokenService';
-import personService from '../../services/personService';   
+import recoverPasswordService from '../../services/recoverPasswordService';   
 import './index.scss';
 
 const RecoverPassword = () => {
@@ -67,7 +67,7 @@ const RecoverPassword = () => {
             return;
         }
         try {
-            await personService.recoverPassword(email, password, token);
+            await recoverPasswordService.recoverPassword(email, password, token);
             console.log('Senha alterada com sucesso!');
         } catch (error) {
             console.error('Erro ao alterar senha:', error);

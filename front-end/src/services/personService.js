@@ -1,22 +1,13 @@
-import api from '../config/axiosConfig'
+import BaseService from "./baseService";
 
-class PersonService {
-    static async recoverPassword(email, newPassword, token) {
-        try {
-            const response = await api.put(`/recover-password/change/${token}`, {
-                email,
-                newPassword
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Erro ao alterar senha:', error);
-            throw error;
-        }
+class PersonService extends BaseService {
+    constructor() {
+        super("/people");
     }
 
     static async validateCurrentPassword(email, newPassword) {
         try {
-            const response = await api.post('/people/validate-password', {
+            const response = await this.api.post('/validate-password', {
                 email,
                 newPassword
             });
@@ -29,7 +20,7 @@ class PersonService {
 
     static async changePassword(email, newPassword) {
         try {
-            const response = await api.put('/people/change-password', {
+            const response = await this.api.put('/change-password', {
                 email,
                 newPassword
             });
