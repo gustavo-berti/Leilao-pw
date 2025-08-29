@@ -1,0 +1,14 @@
+@use '../../vars.scss' as vars;
+
+.long-container{
+    margin-top: 5em;
+    border-radius: 15px;
+    justify-self: center;
+    justify-content: center;
+    max-height: calc(100vh - 80px);
+    width: 75vw;
+    min-width: 300px;
+    padding: 1em;
+    background-color: vars.$primary-color;
+    border: 1px solid darken(vars.$secondary-color, 10%);
+}

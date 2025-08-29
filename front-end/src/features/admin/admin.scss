@@ -1,0 +1,21 @@
+@use '../../vars.scss' as vars;
+
+.row {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    gap: 5px;
+
+    .p-button {
+        padding: 0.5rem 0.7rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        background-color: vars.$tertiary-color;
+        transition: background-color 0.3s ease;
+    }
+
+    .p-button-icon {
+        margin-right: 5px;
+    }
+
+}
