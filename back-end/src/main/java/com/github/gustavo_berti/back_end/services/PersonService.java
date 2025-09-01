@@ -1,5 +1,7 @@
 package com.github.gustavo_berti.back_end.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -12,15 +14,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
+import com.github.gustavo_berti.back_end.dto.PersonListDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Person;
+import com.github.gustavo_berti.back_end.models.PersonProfile;
 import com.github.gustavo_berti.back_end.repositories.PersonRepository;
+import com.github.gustavo_berti.back_end.repositories.ProfileRepository;
 import com.github.gustavo_berti.utils.Const;
 
 @Service
 public class PersonService implements UserDetailsService {
     @Autowired
     private PersonRepository personRepository;
+    @Autowired
+    private ProfileRepository profileRepository;
     @Autowired
     private MessageSource messageSource;
     @Autowired
@@ -35,20 +42,29 @@ public class PersonService implements UserDetailsService {
     private void sendEmailChangePassword(Person person) {
         Context context = new Context();
         context.setVariable("name", person.getName());
-        emailService.emailTemplate(person.getEmail(), "Senha Alterada com Sucesso", Const.templateChangePasswordEmail, context);
+        emailService.emailTemplate(person.getEmail(), "Senha Alterada com Sucesso", Const.templateChangePasswordEmail,
+                context);
     }
 
     public Person insert(Person person) {
         person.setPassword(EncryptPassword(person.getPassword()));
+        person.setActive(true);
         Person newPerson = personRepository.save(person);
         sendSuccessEmail(newPerson);
         return newPerson;
     }
 
-    public Person update(Person person) {
+    public Person update(PersonListDTO person) {
         Person existingPerson = findById(person.getId());
         existingPerson.setName(person.getName());
         existingPerson.setEmail(person.getEmail());
+        PersonProfile profile = new PersonProfile();
+        profile.setPerson(existingPerson);
+        profile.setProfile(profileRepository.findByType(person.getProfile()));
+        List<PersonProfile> profiles = existingPerson.getPersonProfile();
+        profiles.clear();
+        profiles.add(profile);
+        existingPerson.setPersonProfile(profiles);
         return personRepository.save(existingPerson);
     }
 
@@ -56,16 +72,25 @@ public class PersonService implements UserDetailsService {
         Person person = findByEmail(email);
         person.setPassword(EncryptPassword(newPassword));
         sendEmailChangePassword(person);
-        return personRepository.save(person);   
+        return personRepository.save(person);
     }
 
     public void delete(Long id) {
         Person person = findById(id);
-        personRepository.delete(person);
+        person.setActive(false);
+        personRepository.save(person);
     }
 
-    public Page<Person> findAll(Pageable pageable) {
-        return personRepository.findAll(pageable);
+    public Page<PersonListDTO> findAll(Pageable pageable) {
+        return personRepository.findAll(pageable)
+                .map(person -> {
+                    PersonListDTO dto = new PersonListDTO();
+                    dto.setId(person.getId());
+                    dto.setName(person.getName());
+                    dto.setEmail(person.getEmail());
+                    dto.setProfile(person.getPersonProfile().get(0).getProfile().getType());
+                    return dto;
+                });
     }
 
     public Person findById(Long id) {
@@ -95,6 +120,6 @@ public class PersonService implements UserDetailsService {
         Person person = findByEmail(email);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(currentPassword, person.getPassword());
-    }    
+    }
 
 }

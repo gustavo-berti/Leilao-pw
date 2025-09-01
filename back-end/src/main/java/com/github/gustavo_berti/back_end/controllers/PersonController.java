@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.ChangePasswordDTO;
+import com.github.gustavo_berti.back_end.dto.PersonListDTO;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.services.PersonService;
 
@@ -26,7 +27,7 @@ public class PersonController {
     private PersonService personService;
 
     @GetMapping
-    public ResponseEntity<Page<Person>> findAll(Pageable page) {
+    public ResponseEntity<Page<PersonListDTO>> findAll(Pageable page) {
         return ResponseEntity.ok(personService.findAll(page));
     }
 
@@ -42,7 +43,7 @@ public class PersonController {
     }
 
     @PutMapping
-    public ResponseEntity<Person> update(@Valid @RequestBody Person person) {
+    public ResponseEntity<Person> update(@Valid @RequestBody PersonListDTO person) {
         return ResponseEntity.ok(personService.update(person));
     }
 

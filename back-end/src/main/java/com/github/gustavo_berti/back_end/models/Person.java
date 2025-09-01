@@ -92,7 +92,7 @@ public class Person implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return personProfile.stream().map(user -> new SimpleGrantedAuthority(user.getProfile().getType().name()))
+        return personProfile.stream().map(user -> new SimpleGrantedAuthority(user.getProfile().getType()))
                 .collect(Collectors.toList());
     }
 

@@ -35,7 +35,7 @@ public class AuthenticatorService {
         personAuthDTO.setEmail(person.getEmail());
         personAuthDTO.setToken(jwtService.generateToken(authentication.getName()));
         personAuthDTO.setRole(personEntity.getPersonProfile() != null && !personEntity.getPersonProfile().isEmpty()
-                ? personEntity.getPersonProfile().get(0).getProfile().getType().name()
+                ? personEntity.getPersonProfile().get(0).getProfile().getType()
                 : null);
         return personAuthDTO;
     }
