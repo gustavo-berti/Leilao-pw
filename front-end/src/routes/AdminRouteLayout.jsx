@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from "react-router-dom";
-import auth from "../utils/auth";
+import Auth from "../utils/auth";
 
 const AdminRouteLayout = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     return(
-        auth.hasRole(user, 'ROLE_ADMIN') ? <Outlet/> : <Navigate to="/" replace/>
+        Auth.hasRole(user, 'ROLE_ADMIN') ? <Outlet/> : <Navigate to="/" replace/>
     );
 };
 
