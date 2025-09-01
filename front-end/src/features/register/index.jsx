@@ -5,8 +5,10 @@ import { personSchema } from '../../schemas/personSchema';
 import {ShortContainer} from '../../components';
 import './index.scss';
 import { useNavigate } from 'react-router-dom';
+import PersonService from '../../services/personService';
 
 const Register = () => {
+    const personService = new PersonService();
     const navigate = useNavigate();
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState({
@@ -35,13 +37,19 @@ const Register = () => {
         setErrors({});
         try {
             await personSchema.validate(formData, { abortEarly: false });
-            navigate('/');
         } catch (validationErrors) {
             const formattedErrors = {};
             validationErrors.inner.forEach(error => {
                 formattedErrors[error.path] = error.message;
             });
             setErrors(formattedErrors);
+        }
+        try {
+            console.log(formData)
+            await personService.create(formData);
+            navigate('/');
+        } catch (error) {
+            console.error("Error creating person:", error);
         }
     };
 

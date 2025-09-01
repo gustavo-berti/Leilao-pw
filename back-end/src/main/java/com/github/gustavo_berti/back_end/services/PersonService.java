@@ -49,6 +49,14 @@ public class PersonService implements UserDetailsService {
     public Person insert(Person person) {
         person.setPassword(EncryptPassword(person.getPassword()));
         person.setActive(true);
+        if (person.getPersonProfile() != null && !person.getPersonProfile().isEmpty()) {
+            for (PersonProfile pp : person.getPersonProfile()) {
+                Long profileId = pp.getProfile().getId();
+                pp.setPerson(person);
+                pp.setProfile(profileRepository.findById(profileId)
+                        .orElseThrow(() -> new NotFoundException("Perfil não encontrado: " + profileId)));
+            }
+        }
         Person newPerson = personRepository.save(person);
         sendSuccessEmail(newPerson);
         return newPerson;

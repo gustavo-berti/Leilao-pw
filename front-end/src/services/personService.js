@@ -5,7 +5,7 @@ class PersonService extends BaseService {
         super("/people");
     }
 
-    static async validateCurrentPassword(email, newPassword) {
+    async validateCurrentPassword(email, newPassword) {
         try {
             const response = await this.api.post('/validate-password', {
                 email,
@@ -18,7 +18,7 @@ class PersonService extends BaseService {
         }
     }
 
-    static async changePassword(email, newPassword) {
+    async changePassword(email, newPassword) {
         try {
             const response = await this.api.put('/change-password', {
                 email,
@@ -27,6 +27,20 @@ class PersonService extends BaseService {
             return response.data;
         } catch (error) {
             console.error('Erro ao alterar senha:', error);
+            throw error;
+        }
+    }
+
+    async create(data) {
+        data.personProfile = [{
+            profile: {id:2}
+        }];
+        console.log(data);
+        try {
+            const response = await this.api.post('/create', data);
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao criar pessoa:', error);
             throw error;
         }
     }

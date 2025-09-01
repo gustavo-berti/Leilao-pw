@@ -31,7 +31,7 @@ public class PersonController {
         return ResponseEntity.ok(personService.findAll(page));
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Person> insert(@Valid @RequestBody Person person) {
         return ResponseEntity.ok(personService.insert(person));
     }

@@ -4,9 +4,10 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { changePasswordSchema } from '../../schemas/changePasswordSchema';
 import { useNavigate } from 'react-router-dom';
-import personService from '../../services/personService';
+import PersonService from '../../services/personService';
 
 const ChangePassword = () => {
+    const personService = new PersonService();
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user'));
     const [errors, setErrors] = useState({});

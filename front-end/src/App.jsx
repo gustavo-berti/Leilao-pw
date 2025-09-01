@@ -30,8 +30,8 @@ function App() {
         <Components.Navbar user={user} setUser={setUser} />
         <Routes>
           <Route path="/" element={<Pages.Home />} />
-          <Route path="/registrar" element={<Pages.Register />} />
           <Route element={<Layouts.PublicRoute />}>
+            <Route path="/registrar" element={<Pages.Register />} />
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
           </Route>
           <Route element={<Layouts.PrivateRoute />}>
