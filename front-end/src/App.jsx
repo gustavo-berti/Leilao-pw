@@ -37,7 +37,7 @@ function App() {
           <Route element={<Layouts.PrivateRoute />}>
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
           </Route>
-          <Route element={<Layouts.PrivateRoute />}>
+          <Route element={<Layouts.AdminRoute />}>
             <Route path="/admin" element={<Pages.Admin />} />
           </Route>
         </Routes>

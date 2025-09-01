@@ -1,5 +1,6 @@
 class Auth {
-    static async hasRole(user, role){
+    static hasRole(user, role){
+        if(!user || !user.role) return false;
         return user.role === role;
     }
 }
