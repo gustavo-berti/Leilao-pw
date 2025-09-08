@@ -27,8 +27,8 @@ public class PersonController {
     private PersonService personService;
 
     @GetMapping
-    public ResponseEntity<Page<PersonListDTO>> findAll(Pageable page) {
-        return ResponseEntity.ok(personService.findAll(page));
+    public ResponseEntity<Page<PersonListDTO>> findAllActive(Pageable page) {
+        return ResponseEntity.ok(personService.findAllActive(page));
     }
 
     @PostMapping("/create")

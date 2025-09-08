@@ -101,6 +101,18 @@ public class PersonService implements UserDetailsService {
                 });
     }
 
+    public Page<PersonListDTO> findAllActive(Pageable pageable) {
+        return personRepository.findAllActive(pageable)
+                .map(person -> {
+                    PersonListDTO dto = new PersonListDTO();
+                    dto.setId(person.getId());
+                    dto.setName(person.getName());
+                    dto.setEmail(person.getEmail());
+                    dto.setProfile(person.getPersonProfile().get(0).getProfile().getType());
+                    return dto;
+                });
+    }
+
     public Person findById(Long id) {
         return personRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound",
