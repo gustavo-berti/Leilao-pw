@@ -7,7 +7,7 @@ class PersonService extends BaseService {
 
     async validateCurrentPassword(email, newPassword) {
         try {
-            const response = await this.api.post('/validate-password', {
+            const response = await this.api.post(`${this.endPoint}/validate-password`, {
                 email,
                 newPassword
             });
@@ -20,7 +20,7 @@ class PersonService extends BaseService {
 
     async changePassword(email, newPassword) {
         try {
-            const response = await this.api.put('/change-password', {
+            const response = await this.api.put(`${this.endPoint}/change-password`, {
                 email,
                 newPassword
             });
@@ -35,9 +35,8 @@ class PersonService extends BaseService {
         data.personProfile = [{
             profile: {id:2}
         }];
-        console.log(data);
         try {
-            const response = await this.api.post('/create', data);
+            const response = await this.api.post(`${this.endPoint}/create`, data);
             return response.data;
         } catch (error) {
             console.error('Erro ao criar pessoa:', error);

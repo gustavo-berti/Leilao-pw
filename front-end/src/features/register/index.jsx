@@ -3,9 +3,9 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { personSchema } from '../../schemas/personSchema';
 import {ShortContainer} from '../../components';
-import './index.scss';
 import { useNavigate } from 'react-router-dom';
 import PersonService from '../../services/personService';
+import './index.scss';
 
 const Register = () => {
     const personService = new PersonService();
