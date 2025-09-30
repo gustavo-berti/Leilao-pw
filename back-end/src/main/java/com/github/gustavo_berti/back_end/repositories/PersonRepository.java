@@ -18,6 +18,12 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
     @Query("from Person p where p.active = true")   
     public Page<Person> findAllActive(Pageable pageable);
 
+    @Query("from Person p where p.active = false")
+    public Page<Person> findAllInactive(Pageable pageable);
+
+    @Query("from Person p where p.name like %:name%")
+    public Page<Person> findByName(@Param("name") String name, Pageable pageable);
+    
     public Optional<Person> findByEmail(String email);
 
 }

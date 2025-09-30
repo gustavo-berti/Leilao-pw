@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.ChangePasswordDTO;
@@ -29,6 +30,19 @@ public class PersonController {
     @GetMapping
     public ResponseEntity<Page<PersonListDTO>> findAllActive(Pageable page) {
         return ResponseEntity.ok(personService.findAllActive(page));
+    }
+
+    @GetMapping("/inactive")
+    public ResponseEntity<Page<PersonListDTO>> findAllInactive(Pageable page) {
+        return ResponseEntity.ok(personService.findAllInactive(page));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<PersonListDTO>> findByName(@RequestParam(value = "name", required = false) String name, Pageable page) {
+        if (name == null || name.isEmpty()) {
+            return ResponseEntity.ok(personService.findAllActive(page));
+        }
+        return ResponseEntity.ok(personService.findByName(name, page));
     }
 
     @PostMapping("/create")
@@ -50,6 +64,11 @@ public class PersonController {
     @PutMapping("/change-password")
     public ResponseEntity<Person> changePassword(@Valid @RequestBody ChangePasswordDTO dto) {
         return ResponseEntity.ok(personService.changePassword(dto.getEmail(), dto.getNewPassword()));
+    }
+
+    @PutMapping("/restore/{id}")
+    public ResponseEntity<Person> restore(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(personService.restore(id));
     }
 
     @DeleteMapping("/{id}")

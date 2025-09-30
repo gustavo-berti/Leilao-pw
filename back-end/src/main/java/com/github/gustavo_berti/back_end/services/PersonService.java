@@ -66,6 +66,7 @@ public class PersonService implements UserDetailsService {
         Person existingPerson = findById(person.getId());
         existingPerson.setName(person.getName());
         existingPerson.setEmail(person.getEmail());
+        existingPerson.setActive(person.getActive());
         PersonProfile profile = new PersonProfile();
         profile.setPerson(existingPerson);
         profile.setProfile(profileRepository.findByType(person.getProfile()));
@@ -108,6 +109,33 @@ public class PersonService implements UserDetailsService {
                     dto.setId(person.getId());
                     dto.setName(person.getName());
                     dto.setEmail(person.getEmail());
+                    dto.setActive(person.isActive());
+                    dto.setProfile(person.getPersonProfile().get(0).getProfile().getType());
+                    return dto;
+                });
+    }
+    
+    public Page<PersonListDTO> findAllInactive(Pageable page) {
+        return personRepository.findAllInactive(page)
+                .map(person -> {
+                    PersonListDTO dto = new PersonListDTO();
+                    dto.setId(person.getId());
+                    dto.setName(person.getName());
+                    dto.setEmail(person.getEmail());
+                    dto.setActive(person.isActive());
+                    dto.setProfile(person.getPersonProfile().get(0).getProfile().getType());
+                    return dto;
+                });
+    }
+
+    public Page<PersonListDTO> findByName(String name, Pageable page) {
+        return personRepository.findByName(name, page)
+                .map(person -> {
+                    PersonListDTO dto = new PersonListDTO();
+                    dto.setId(person.getId());
+                    dto.setName(person.getName());
+                    dto.setEmail(person.getEmail());
+                    dto.setActive(person.isActive());
                     dto.setProfile(person.getPersonProfile().get(0).getProfile().getType());
                     return dto;
                 });
@@ -140,6 +168,12 @@ public class PersonService implements UserDetailsService {
         Person person = findByEmail(email);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.matches(currentPassword, person.getPassword());
+    }
+
+    public Person restore(Long id) {
+        Person person = findById(id);
+        person.setActive(true);
+        return personRepository.save(person);
     }
 
 }

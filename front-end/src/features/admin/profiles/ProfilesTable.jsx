@@ -69,8 +69,8 @@ const ProfilesTable = () => {
         )
     }
 
-    return (
-        <>
+    const addProfile = () =>{
+        return (
             <div id='add-profile'>
                 <InputText
                     value={newProfile}
@@ -80,7 +80,12 @@ const ProfilesTable = () => {
                 />
                 <Button label="Adicionar" icon="pi pi-plus" onClick={handleAddProfile} />
             </div>
-            <DataTable value={profiles} editMode='row' dataKey="id" onRowEditComplete={onRowEditComplete}>
+        )
+    }
+
+    return (
+        <>
+            <DataTable value={profiles} editMode='row' dataKey="id" onRowEditComplete={onRowEditComplete} paginator rows={10} header={addProfile}>
                 <Column field="id" header="ID" />
                 <Column field="type" header="Perfil" editor={typeEditor} />
                 <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} />

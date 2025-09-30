@@ -12,7 +12,7 @@ const Admin = () => {
             <h1>Painel Administrativo</h1>
             <div className="row">
                 <Button id='users' label="Usuários" icon="pi pi-users" onClick={() => setActiveTab('users')}/>
-                <Button id='profiles' label="Perfis" icon="pi pi-user" onClick={()=>setActiveTab('profiles')} />
+                <Button id='profiles' label="Perfis" icon="pi pi-user" onClick={() => setActiveTab('profiles')} />
             </div>
             <div className='content'>
                 {activeTab === 'users' &&(

@@ -1,9 +1,10 @@
 @use '../../../vars.scss' as vars;
 
-#add-profile {
+#table-header {
     display: flex;
     align-items: center;
     margin: 10px;
+    justify-content: space-between;
 
     .p-inputtext {
         padding: 0.5rem 0.7rem;
@@ -12,6 +13,7 @@
     }
 
     .p-button {
+        margin: 0 2.5px;
         padding: 0.5rem 0.7rem;
         font-size: 1rem;
         border-radius: 4px;
@@ -21,5 +23,14 @@
 
     .p-button-icon {
         margin-right: 5px;
+        color: white;
     }
+
+    .p-button-label {
+        color: white;
+    }
+}
+
+#search {
+    justify-self: flex-end;
 }

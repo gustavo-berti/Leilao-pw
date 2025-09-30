@@ -8,4 +8,5 @@ public class PersonListDTO {
     private String name;
     private String email;
     private String profile;
+    private Boolean active;
 }
