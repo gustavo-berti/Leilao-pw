@@ -15,4 +15,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long>{
 
     @Query("from Profile p where p.type =:type")
     public Profile findByType(@Param("type") String type);
+
+    @Query("from Profile p where p.type like %:profile%")
+    public Page<Profile> findByName(@Param("profile") String profile, Pageable page);
 }

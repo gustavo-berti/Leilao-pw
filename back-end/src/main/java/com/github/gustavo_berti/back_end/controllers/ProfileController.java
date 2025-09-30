@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.models.Profile;
@@ -27,6 +28,14 @@ public class ProfileController {
     @GetMapping
     public ResponseEntity<Page<Profile>> findAll(Pageable page){
         return ResponseEntity.ok(profileService.findAll(page));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Profile>> findByName(@RequestParam(value = "profile", required = false) String profile, Pageable page){
+        if(profile == null || profile.isEmpty()){
+            return ResponseEntity.ok(profileService.findAll(page));
+        }
+        return ResponseEntity.ok(profileService.findByName(profile, page));
     }
 
     @PostMapping

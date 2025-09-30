@@ -146,7 +146,7 @@ const UsersTable = () => {
                         <Button label="Ativos" icon="pi pi-users" className="p-button-outlined" onClick={fetchUsers} />
                         <Button label="Inativos" icon="pi pi-user-slash" className="p-button-outlined" onClick={fetchInactiveUsers} />
                     </div>
-                    <InputText id='search' type="search" placeholder="Buscar por nome" onInput={(e) => fetchUsersByName(e.target.value)} style={{ marginLeft: '10px' }} />
+                    <InputText id='search' type="search" placeholder="Buscar por nome" onInput={(e) => fetchUsersByName(e.target.value)} />
                 </div>
             </>
         )
@@ -163,9 +163,9 @@ const UsersTable = () => {
             resizableColumns columnResizeMode='fit'
         >
             <Column field="id" header="ID" sortable style={{ width: '5%' }} />
-            <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '25%' }} />
+            <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '35%' }} />
             <Column field="email" header="Email" editor={emailEditor} sortable style={{ width: '25%' }} />
-            <Column field="profile" header="Perfil" editor={profileEditor} sortable style={{ width: '25%' }} />
+            <Column field="profile" header="Perfil" editor={profileEditor} sortable style={{ width: '15%' }} />
             <Column field="active" header="Ação" body={rowData => rowData.active ? deleteButton(rowData) : restoreButton(rowData)} style={{ width: '10%' }} />
             <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
         </DataTable>

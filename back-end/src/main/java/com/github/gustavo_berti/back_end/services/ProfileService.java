@@ -42,4 +42,8 @@ public class ProfileService {
                 messageSource.getMessage("profile.notfound", new Object[] { id }, LocaleContextHolder.getLocale())));
     }
 
+    public Page<Profile> findByName(String profile, Pageable page) {
+        return profileRepository.findByName(profile, page);
+    }
+
 }

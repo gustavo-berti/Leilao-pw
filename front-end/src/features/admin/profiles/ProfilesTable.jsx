@@ -11,7 +11,7 @@ const ProfilesTable = () => {
     const [profiles, setProfiles] = useState([]);
     const [newProfile, setNewProfile] = useState('');
 
-    async function fetchProfiles() {
+    const fetchProfiles = async () => {
         try {
             const result = await profileService.getAll();
             setProfiles(result.content);
@@ -23,6 +23,15 @@ const ProfilesTable = () => {
     useEffect(() => {
         fetchProfiles();
     }, [])
+
+    const fetchProfilesByName = async (name) => {
+        try {
+            const result = await profileService.getByName(name);
+            setProfiles(result.content);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const onRowEditComplete = (e) => {
         let _profiles = [...profiles];
@@ -69,27 +78,40 @@ const ProfilesTable = () => {
         )
     }
 
-    const addProfile = () =>{
+    const header = () => {
         return (
-            <div id='add-profile'>
-                <InputText
-                    value={newProfile}
-                    placeholder='Novo perfil'
-                    style={{ textTransform: 'uppercase' }}
-                    onChange={(e) => setNewProfile(e.target.value.toUpperCase())}
-                />
-                <Button label="Adicionar" icon="pi pi-plus" onClick={handleAddProfile} />
-            </div>
+            <>
+                <div id='add-profile'>
+                    <div>
+                        <InputText
+                            value={newProfile}
+                            placeholder='Novo perfil'
+                            style={{ textTransform: 'uppercase' }}
+                            onChange={(e) => setNewProfile(e.target.value.toUpperCase())}
+                        />
+                        <Button label="Adicionar" icon="pi pi-plus" onClick={handleAddProfile} />
+                    </div>
+                    <InputText id='search' type="search" placeholder="Buscar por nome" onInput={(e) => fetchProfilesByName(e.target.value)} />
+                </div>
+            </>
         )
     }
 
     return (
         <>
-            <DataTable value={profiles} editMode='row' dataKey="id" onRowEditComplete={onRowEditComplete} paginator rows={10} header={addProfile}>
-                <Column field="id" header="ID" />
+            <DataTable
+                value={profiles}
+                editMode='row'
+                dataKey="id"
+                onRowEditComplete={onRowEditComplete}
+                paginator rows={10}
+                header={header}
+                resizableColumns columnResizeMode='fit'
+            >
+                <Column field="id" header="ID" style={{ width: '5%' }} />
                 <Column field="type" header="Perfil" editor={typeEditor} />
-                <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} />
-                <Column body={deleteButton} header="Excluir" bodyStyle={{ textAlign: 'left' }} />
+                <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
+                <Column body={deleteButton} header="Ação" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
             </DataTable>
         </>
     )
