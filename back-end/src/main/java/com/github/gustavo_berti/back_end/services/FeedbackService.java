@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Feedback;
 import com.github.gustavo_berti.back_end.repositories.FeedbackRepository;
 
@@ -39,7 +40,7 @@ public class FeedbackService {
 
     public Feedback findById (Long id) {
         return feedbackRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(messageSource.getMessage("feedback.notfound",
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("feedback.notfound",
                     new Object[] {id}, LocaleContextHolder.getLocale())));
     }
 
