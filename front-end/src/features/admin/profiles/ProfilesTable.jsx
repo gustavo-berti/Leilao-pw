@@ -37,7 +37,6 @@ const ProfilesTable = () => {
         let _profiles = [...profiles];
         _profiles[e.index] = e.newData;
         setProfiles(_profiles);
-        console.log(e.newData);
         profileService.update(e.newData);
     }
 

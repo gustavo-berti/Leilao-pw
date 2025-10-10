@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.CategoryListDTO;
 import com.github.gustavo_berti.back_end.models.Category;
 import com.github.gustavo_berti.back_end.services.CategoryService;
 
@@ -23,7 +24,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<Page<Category>> findAll(Pageable page){
+    public ResponseEntity<Page<CategoryListDTO>> findAll(Pageable page){
         return ResponseEntity.ok(categoryService.findAll(page));
     }
 

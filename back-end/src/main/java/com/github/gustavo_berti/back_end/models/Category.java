@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -26,7 +24,4 @@ public class Category {
     @Column(name = "observation", nullable = true)
     @NotBlank(message = "Observação não pode ficar em branco")
     private String observation;
-    @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    private Person person;
 }
