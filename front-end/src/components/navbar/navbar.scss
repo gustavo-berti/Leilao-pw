@@ -15,6 +15,25 @@
     width: 100%;
     box-sizing: border-box;
 
+    .p-button {
+        margin: 0 2.5px;
+        padding: 0.5rem 0.7rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        background-color: vars.$primary-color;
+        transition: background-color 0.3s ease;
+    }
+
+    .p-button-icon {
+        color: vars.$tertiary-color;
+        margin-right: 10px;
+    }
+
+    .p-button-label {
+        color: vars.$text-primary-color;
+    }
+
+
     .p-menubar-root-list {
         .p-menuitem {
             .p-menuitem-link {
@@ -48,15 +67,6 @@
     font-size: 1.2rem;
     border-radius: 4px;
     transition: background-color 0.3s ease;
-
-    .p-button-icon {
-        color: vars.$tertiary-color;
-        margin-right: 10px;
-    }
-
-    .p-button-text {
-        color: vars.$text-primary-color;
-    }
 
     &:focus {
         outline: none;
@@ -115,7 +125,7 @@
             background-color: darken(vars.$tertiary-color, 10%);
         }
 
-        .p-button-icon{
+        .p-button-icon {
             margin-right: 15px;
         }
     }

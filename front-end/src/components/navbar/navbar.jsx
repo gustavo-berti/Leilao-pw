@@ -4,7 +4,7 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import React, { useRef } from 'react';
 import LoginForm from './LoginForm';
 import PerfilPopup from './PerfilPopup';
-import './index.scss';
+import './navbar.scss';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ user, setUser }) => {

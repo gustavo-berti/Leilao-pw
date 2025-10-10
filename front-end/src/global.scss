@@ -8,9 +8,45 @@
   font-family: "Poppins", sans-serif;
 }
 
-body{
+body {
   background-color: vars.$secondary-color;
   padding-top: 60px;
   min-height: 100vh;
   box-sizing: border-box;
+}
+
+.p-inputtext {
+  padding: 0.5rem 0.7rem;
+  margin-right: 0.5rem;
+
+}
+
+.p-button {
+  margin: 0 2.5px;
+  padding: 0.5rem 0.7rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  background-color: vars.$tertiary-color;
+  transition: background-color 0.3s ease;
+}
+
+.p-button-icon {
+  margin-right: 5px;
+  color: white;
+}
+
+.p-button-label {
+  color: white;
+}
+
+.p-button-danger{
+    background-color: #ef4444;
+    margin: 0;
+    border-radius: 6px;
+}
+
+.p-button-success{
+    background-color: #22c55e;
+    margin: 0;
+    border-radius: 6px;
 }

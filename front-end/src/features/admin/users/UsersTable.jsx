@@ -166,8 +166,8 @@ const UsersTable = () => {
             <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '35%' }} />
             <Column field="email" header="Email" editor={emailEditor} sortable style={{ width: '25%' }} />
             <Column field="profile" header="Perfil" editor={profileEditor} sortable style={{ width: '15%' }} />
-            <Column field="active" header="Ação" body={rowData => rowData.active ? deleteButton(rowData) : restoreButton(rowData)} style={{ width: '10%' }} />
             <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
+            <Column field="active" header="Ação" body={rowData => rowData.active ? deleteButton(rowData) : restoreButton(rowData)} style={{ width: '10%' }} />
         </DataTable>
     )
 }
