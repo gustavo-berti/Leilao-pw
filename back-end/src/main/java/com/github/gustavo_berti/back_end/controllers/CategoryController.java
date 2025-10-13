@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.CategoryListDTO;
@@ -26,6 +27,14 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<Page<CategoryListDTO>> findAll(Pageable page){
         return ResponseEntity.ok(categoryService.findAll(page));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<CategoryListDTO>> findByName(@RequestParam(value="name",required = false) String name, Pageable page){
+        if(name == null || name.isEmpty()){
+            return ResponseEntity.ok(categoryService.findAll(page));
+        }
+        return ResponseEntity.ok(categoryService.findByName(name, page));
     }
 
     @PostMapping

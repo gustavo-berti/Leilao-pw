@@ -45,10 +45,20 @@ public class CategoryService {
         });
     }
 
+    public Page<CategoryListDTO> findByName(String name, Pageable page) {
+        return categoryRepository.findByName(name, page).map(c -> {
+            CategoryListDTO dto = new CategoryListDTO();
+            dto.setId(c.getId());
+            dto.setName(c.getName());
+            dto.setObservation(c.getObservation());
+            return dto;
+        });
+    }
+
+
     private Category findById(long id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("category.notfound",
                         new Object[] { id }, LocaleContextHolder.getLocale())));
     }
-
 }
