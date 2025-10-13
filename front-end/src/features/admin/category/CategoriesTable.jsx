@@ -5,11 +5,12 @@ import { InputText } from "primereact/inputtext";
 import { useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import './CategoriesTable.scss';
+import NewCategoryModal from "./newCategoryModal";
 
 const CategoriesTable = () => {
     const categoryService = new CategoryService();
     const [Categories, setCategories] = useState([]);
-    const [newCategory, setNewCategory] = useState({ name: '', observation: '' });
+    const [showModal, setShowModal] = useState(false);
 
     const fetchCategories = async () => {
         try {
@@ -49,31 +50,8 @@ const CategoriesTable = () => {
         }
     };
 
-    const handleAddCategory = async () => {
-        <Modal>
-            <h2>Adicionar Categoria</h2>
-            <InputText
-                placeholder="Nome da Categoria"
-                value={newCategory.name}
-                onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-            />
-            <InputText
-                placeholder="Observações"
-                value={newCategory.observation}
-                onChange={(e) => setNewCategory({ ...newCategory, observation: e.target.value })}
-            />
-            <Button label="Adicionar" icon="pi pi-plus" onClick={async () => {
-                if (!newCategory.name) return;
-                try {
-                    const result = await categoryService.insert(newCategory);
-                    setCategories([...Categories, result]);
-                    setNewCategory({ name: '', observation: '' });
-                } catch (error) {
-                    console.error("Error adding category:", error);
-                }
-            }} />
-            <Button label="Cancelar" icon="pi pi-times" className="p-button-secondary" onClick={() => setNewCategory({ name: '', observation: '' })} />
-        </Modal>
+    const handleCategoryAdded = (newCategory) => {
+        setCategories([...Categories, newCategory]);
     };
 
     const nameEditor = (options) => {
@@ -94,9 +72,9 @@ const CategoriesTable = () => {
         return (
             <div id="category-table">
                 <div>
-                    <Button label="Adicionar Categoria" icon="pi pi-plus" onClick={handleAddCategory} />
+                    <Button label="Adicionar Categoria" icon="pi pi-plus" onClick={() => setShowModal(true)} />
                 </div>
-                <InputText placeholder="Buscar Categoria" />
+                <InputText placeholder="Buscar Categoria" onChange={(e) => fetchCategoriesByName(e.target.value)} />
             </div>
         );
     }
@@ -118,6 +96,8 @@ const CategoriesTable = () => {
                 <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }}></Column>
                 <Column body={deleteButton} header="Excluir" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }}></Column>
             </DataTable>
+
+            <NewCategoryModal visible={showModal} onHide={() => setShowModal(false)} onCategoryAdded={handleCategoryAdded} />
         </>
     );
 };
