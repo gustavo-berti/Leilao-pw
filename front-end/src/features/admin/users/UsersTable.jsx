@@ -1,11 +1,12 @@
-import { Column } from 'primereact/column';
-import { DataTable } from 'primereact/datatable';
-import PersonService from '../../../services/personService';
 import { useEffect, useState } from 'react';
+import { DataTable } from 'primereact/datatable';
 import { InputText } from 'primereact/inputtext';
 import { Dropdown } from 'primereact/dropdown';
-import ProfileService from '../../../services/profileService';
 import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import PersonService from '../../../services/personService';
+import ProfileService from '../../../services/profileService';
 import './UsersTable.scss';
 
 const UsersTable = () => {
@@ -77,9 +78,9 @@ const UsersTable = () => {
         setLoading(true);
         try {
             await personService.update(e.newData);
-        }catch(error){
+        } catch (error) {
             console.log(error);
-        } finally{
+        } finally {
             setLoading(false);
         }
         setUsers(_users);
@@ -111,12 +112,14 @@ const UsersTable = () => {
 
     const deleteButton = (rowData) => {
         return (
-            <Button
-                icon="pi pi-trash"
-                className="p-button-danger"
-                onClick={() => {
-                    deleteUser(rowData.id);
-                }}
+            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => confirmDialog({
+                message: 'Quer deletar este usuário?',
+                header: 'Confirmação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: "Sim",
+                rejectLabel: "Não",
+                accept: () => deleteUser(rowData.id)
+            })}
                 loading={deletingIds.includes(rowData.id)}
                 disabled={deletingIds.includes(rowData.id)}
             />
@@ -125,12 +128,14 @@ const UsersTable = () => {
 
     const restoreButton = (rowData) => {
         return (
-            <Button
-                icon="pi pi-refresh"
-                className="p-button-success"
-                onClick={() => {
-                    restoreUser(rowData.id);
-                }}
+            <Button icon="pi pi-refresh" className="p-button-success" onClick={() => confirmDialog({
+                message: 'Quer restaurar este usuário?',
+                header: 'Confirmação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: "Sim",
+                rejectLabel: "Não",
+                accept: () => restoreUser(rowData.id)
+            })}
                 loading={deletingIds.includes(rowData.id)}
                 disabled={deletingIds.includes(rowData.id)}
             />
@@ -181,24 +186,27 @@ const UsersTable = () => {
     }
 
     return (
-        <DataTable
-            value={users}
-            loading={loading}
-            editMode='row'
-            dataKey="id"
-            onRowEditComplete={onRowEditComplete}
-            paginator rows={10}
-            header={header}
-            resizableColumns columnResizeMode='fit'
-            emptyMessage="Nenhum usuário encontrado."
-        >
-            <Column field="id" header="ID" sortable style={{ width: '5%' }} />
-            <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '35%' }} />
-            <Column field="email" header="Email" editor={emailEditor} sortable style={{ width: '25%' }} />
-            <Column field="profile" header="Perfil" editor={profileEditor} sortable style={{ width: '15%' }} />
-            <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
-            <Column field="active" header="Ação" body={rowData => rowData.active ? deleteButton(rowData) : restoreButton(rowData)} style={{ width: '10%' }} />
-        </DataTable>
+        <>
+            <DataTable
+                value={users}
+                loading={loading}
+                editMode='row'
+                dataKey="id"
+                onRowEditComplete={onRowEditComplete}
+                paginator rows={10}
+                header={header}
+                resizableColumns columnResizeMode='fit'
+                emptyMessage="Nenhum usuário encontrado."
+            >
+                <Column field="id" header="ID" sortable style={{ width: '5%' }} />
+                <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '35%' }} />
+                <Column field="email" header="Email" editor={emailEditor} sortable style={{ width: '25%' }} />
+                <Column field="profile" header="Perfil" editor={profileEditor} sortable style={{ width: '15%' }} />
+                <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
+                <Column field="active" header="Ação" body={rowData => rowData.active ? deleteButton(rowData) : restoreButton(rowData)} style={{ width: '10%' }} />
+            </DataTable>
+            <ConfirmDialog />
+        </>
     )
 }
 

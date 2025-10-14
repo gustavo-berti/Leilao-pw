@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import ProfileService from '../../../services/profileService';
-import { useEffect, useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
+import { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+import ProfileService from '../../../services/profileService';
 import './ProfilesTable.scss';
 
 const ProfilesTable = () => {
@@ -85,7 +86,15 @@ const ProfilesTable = () => {
     const deleteButton = (rowData) => {
         const isDeleting = deletingIds.includes(rowData.id);
         return (
-            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} loading={isDeleting} disabled={isDeleting} />
+            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => confirmDialog({
+                message: 'Quer deletar este perfil?',
+                header: 'Confirmação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: "Sim",
+                rejectLabel: "Não",
+                accept: () => handleDelete(rowData.id)
+            })
+            } loading={isDeleting} disabled={isDeleting} />
         )
     }
 
@@ -136,6 +145,7 @@ const ProfilesTable = () => {
                 <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
                 <Column body={deleteButton} header="Ação" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }} />
             </DataTable>
+            <ConfirmDialog />
         </>
     )
 }

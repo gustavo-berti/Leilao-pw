@@ -50,3 +50,17 @@ body {
     margin: 0;
     border-radius: 6px;
 }
+
+.p-confirm-dialog {
+    .p-dialog-content {
+        padding: 1rem !important;
+    }
+    
+    .p-dialog-header {
+        padding: 0.5rem 1rem !important;
+    }
+    
+    .p-dialog-footer {
+        padding: 0.5rem 1rem !important;
+    }
+}

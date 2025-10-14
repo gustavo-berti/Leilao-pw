@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import CategoryService from "../../../services/categoryService";
 import { InputText } from "primereact/inputtext";
-import { useEffect, useState } from "react";
 import { Button } from "primereact/button";
-import './CategoriesTable.scss';
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import CategoryService from "../../../services/categoryService";
 import NewCategoryModal from "./newCategoryModal";
+import './CategoriesTable.scss';
 
 const CategoriesTable = () => {
     const categoryService = new CategoryService();
@@ -84,7 +85,14 @@ const CategoriesTable = () => {
     const deleteButton = (rowData) => {
         const isDeleting = deletingIds.includes(rowData.id);
         return (
-            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} loading={isDeleting} disabled={isDeleting} />
+            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => confirmDialog({
+                message: 'Quer deletar esta categoria?',
+                header: 'Confirmação',
+                icon: 'pi pi-exclamation-triangle',
+                acceptLabel: "Sim",
+                rejectLabel: "Não",
+                accept: () => handleDelete(rowData.id)
+            })} loading={isDeleting} disabled={isDeleting} />
         )
     }
 
@@ -118,7 +126,7 @@ const CategoriesTable = () => {
                 <Column rowEditor header="Editar" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }}></Column>
                 <Column body={deleteButton} header="Excluir" bodyStyle={{ textAlign: 'left' }} style={{ width: '10%' }}></Column>
             </DataTable>
-
+            <ConfirmDialog />
             <NewCategoryModal visible={showModal} onHide={() => setShowModal(false)} onCategoryAdded={handleCategoryAdded} />
         </>
     );
