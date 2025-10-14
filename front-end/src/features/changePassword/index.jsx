@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { ShortContainer } from '../../components'
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
@@ -10,6 +10,8 @@ const ChangePassword = () => {
     const personService = new PersonService();
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem('user'));
+    const [loading, setLoading] = useState(false);
+    const [touched, setTouched] = useState({});
     const [errors, setErrors] = useState({});
     const [message, setMessage] = useState('');
     const [formData, setFormData] = useState({
@@ -18,25 +20,45 @@ const ChangePassword = () => {
         confirmPassword: ''
     });
 
+    useEffect(() => {
+        const validateField = async () => {
+            try {
+                await changePasswordSchema.validate(formData, { abortEarly: false });
+                setErrors({});
+            } catch (validationErrors) {
+                const formattedErrors = {};
+                validationErrors.inner.forEach(error => {
+                    if (touched[error.path]) {
+                        formattedErrors[error.path] = error.message;
+                    }
+                });
+                setErrors(formattedErrors);
+            }
+        };
+        const timeoutId = setTimeout(validateField, 300);
+        return () => clearTimeout(timeoutId);
+    }, [formData, touched]);
+
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
         }));
-
-        if (errors[field]) {
-            setErrors(prev => ({
-                ...prev,
-                [field]: null
-            }));
-        }
     };
+
+    const handleBlur = (field) => {
+        setTouched(prev => ({
+            ...prev,
+            [field]: true
+        }));
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
         setMessage('');
-
+        setLoading(true);
+        setTouched({ currentPassword: true, password: true, confirmPassword: true });
         try {
             await changePasswordSchema.validate(formData, { abortEarly: false });
         } catch (validationErrors) {
@@ -57,6 +79,8 @@ const ChangePassword = () => {
             setMessage('Senha alterada com sucesso!');
         } catch (error) {
             console.error('Erro ao alterar senha:', error);
+        } finally {
+            setLoading(false);
         }
     };
     return (<>
@@ -65,17 +89,17 @@ const ChangePassword = () => {
             <form onSubmit={handleSubmit}>
                 <div className="p-field">
                     <label htmlFor="currentPassword">Senha Atual</label>
-                    <InputText id="currentPassword" value={formData.currentPassword} type="password" placeholder="Digite sua senha atual" onChange={(e) => handleInputChange('currentPassword', e.target.value)} />
+                    <InputText id="currentPassword" value={formData.currentPassword} type="password" placeholder="Digite sua senha atual" disabled={loading} onChange={(e) => handleInputChange('currentPassword', e.target.value)} onBlur={() => handleBlur("currentPassword")} />
                     {errors.currentPassword && <small className="p-error">{errors.currentPassword}</small>}
                 </div>
                 <div className="p-field">
                     <label htmlFor="newPassword">Nova Senha</label>
-                    <InputText id="newPassword" value={formData.password} type="password" placeholder="Digite sua nova senha" onChange={(e) => handleInputChange('password', e.target.value)} />
+                    <InputText id="newPassword" value={formData.password} type="password" placeholder="Digite sua nova senha"  disabled={loading} onChange={(e) => handleInputChange('password', e.target.value)} onBlur={() => handleBlur("password")} />
                     {errors.password && <small className="p-error">{errors.password}</small>}
                 </div>
                 <div className="p-field">
                     <label htmlFor="confirmNewPassword">Confirme a Nova Senha</label>
-                    <InputText id="confirmNewPassword" value={formData.confirmPassword} type="password" placeholder="Confirme sua nova senha" onChange={(e) => handleInputChange('confirmPassword', e.target.value)} />
+                    <InputText id="confirmNewPassword" value={formData.confirmPassword} type="password" placeholder="Confirme sua nova senha" disabled={loading} onChange={(e) => handleInputChange('confirmPassword', e.target.value)} onBlur={() => handleBlur("confirmPassword")} />
                     {errors.confirmPassword && <small className="p-error">{errors.confirmPassword}</small>}
                 </div>
                 {message && (
@@ -86,8 +110,8 @@ const ChangePassword = () => {
                     </div>
                 )}
                 <div className="p-field" id='buttons'>
-                    <Button label="Alterar Senha" type='submit' className="p-button-success" />
-                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => navigate('/')} />
+                    <Button label="Alterar Senha" type='submit' className="p-button-success" loading={loading} disabled={loading} />
+                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => navigate('/')} disabled={loading} />
                 </div>
             </form>
         </ShortContainer>

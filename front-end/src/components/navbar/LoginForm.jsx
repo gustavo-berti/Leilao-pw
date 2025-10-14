@@ -1,38 +1,57 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { loginSchema } from '../../schemas/loginSchema';
 import AuthService from '../../services/authService';
 
 const LoginForm = ({ onLogin }) => {
-    const navigate = useNavigate();
     const authService = new AuthService();
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [touched, setTouched] = useState({});
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        const validateField = async () => {
+            try {
+                await loginSchema.validate(formData, { abortEarly: false });
+                setErrors({});
+            } catch (validationErrors) {
+                const formattedErrors = {};
+                validationErrors.inner.forEach(error => {
+                    if (touched[error.path]) {
+                        formattedErrors[error.path] = error.message;
+                    }
+                });
+                setErrors(formattedErrors);
+            }
+        };
+        const timeoutId = setTimeout(validateField, 300);
+        return () => clearTimeout(timeoutId);
+    }, [formData, touched]);
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
             [field]: value
         }));
-
-        if (errors[field]) {
-            setErrors(prev => ({
-                ...prev,
-                [field]: null
-            }));
-        }
     };
+
+    const handleBlur = (field) => {
+        setTouched(prev => ({
+            ...prev,
+            [field]: true
+        }));
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
         setLoading(true);
+        setTouched({ email: true, password: true });
         try {
             await loginSchema.validate(formData, { abortEarly: false });
         } catch (validationErrors) {
@@ -74,6 +93,7 @@ const LoginForm = ({ onLogin }) => {
                             type="email"
                             value={formData.email}
                             onChange={(e) => handleInputChange("email", e.target.value)}
+                            onBlur={() => handleBlur("email")}
                             required
                         />
                     </div>
@@ -84,6 +104,7 @@ const LoginForm = ({ onLogin }) => {
                             type="password"
                             value={formData.password}
                             onChange={(e) => handleInputChange("password", e.target.value)}
+                            onBlur={() => handleBlur("password")}
                             required
                         />
                     </div>
