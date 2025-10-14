@@ -11,42 +11,60 @@ const CategoriesTable = () => {
     const categoryService = new CategoryService();
     const [Categories, setCategories] = useState([]);
     const [showModal, setShowModal] = useState(false);
-
-    const fetchCategories = async () => {
-        try {
-            const data = await categoryService.getAll();
-            setCategories(data.content);
-        } catch (error) {
-            console.error("Error fetching categories:", error);
-        }
-    };
+    const [loading, setLoading] = useState(false);
+    const [deletingIds, setDeletingIds] = useState([]);
 
     useEffect(() => {
         fetchCategories();
     }, []);
 
+    const fetchCategories = async () => {
+        setLoading(true);
+        try {
+            const data = await categoryService.getAll();
+            setCategories(data.content);
+        } catch (error) {
+            console.error("Error fetching categories:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const fetchCategoriesByName = async (name) => {
+        setLoading(true);
         try {
             const result = await categoryService.getByName(name);
             setCategories(result.content);
         } catch (error) {
             console.error("Error fetching categories by name:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const onRowEditComplete = async (e) => {
         let _categories = [...Categories];
         _categories[e.index] = e.newData;
+        setLoading(true);
+        try {
+            await categoryService.update(e.newData);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
         setCategories(_categories);
-        categoryService.update(e.newData);
     };
 
     const handleDelete = async (id) => {
+        setDeletingIds([...deletingIds, id]);
         try {
             await categoryService.delete(id);
             setCategories(Categories.filter(category => category.id !== id));
         } catch (error) {
             console.error("Error deleting category:", error);
+        } finally {
+            setDeletingIds(prev => prev.filter(deletingId => deletingId !== id));
         }
     };
 
@@ -63,8 +81,9 @@ const CategoriesTable = () => {
     }
 
     const deleteButton = (rowData) => {
+        const isDeleting = deletingIds.includes(rowData.id);
         return (
-            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} />
+            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} loading={isDeleting} disabled={isDeleting} />
         )
     }
 
@@ -83,6 +102,7 @@ const CategoriesTable = () => {
         <>
             <DataTable
                 value={Categories}
+                loading={loading}
                 editMode="row"
                 dataKey="id"
                 onRowEditComplete={onRowEditComplete}

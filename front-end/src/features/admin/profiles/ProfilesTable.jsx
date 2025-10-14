@@ -10,47 +10,66 @@ const ProfilesTable = () => {
     const profileService = new ProfileService();
     const [profiles, setProfiles] = useState([]);
     const [newProfile, setNewProfile] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [deletingIds, setDeletingIds] = useState([]);
+
+    useEffect(() => {
+        fetchProfiles();
+    }, []);
 
     const fetchProfiles = async () => {
+        setLoading(true);
         try {
             const result = await profileService.getAll();
             setProfiles(result.content);
         } catch (error) {
-            console.log(error)
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
-    useEffect(() => {
-        fetchProfiles();
-    }, [])
-
     const fetchProfilesByName = async (name) => {
+        setLoading(true);
         try {
             const result = await profileService.getByName(name);
             setProfiles(result.content);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
-    const onRowEditComplete = (e) => {
+    const onRowEditComplete = async (e) => {
         let _profiles = [...profiles];
         _profiles[e.index] = e.newData;
+        setLoading(true);
+        try {
+            await profileService.update(e.newData);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
         setProfiles(_profiles);
-        profileService.update(e.newData);
     }
 
     const handleDelete = async (id) => {
+        setDeletingIds([...deletingIds, id]);
         try {
             await profileService.delete(id);
             setProfiles(profiles.filter(profile => profile.id !== id));
         } catch (error) {
             console.log(error);
+        } finally {
+            setDeletingIds(prev => prev.filter(deletingId => deletingId !== id));
         }
     };
 
     const handleAddProfile = async () => {
         if (!newProfile) return;
+        setLoading(true);
         try {
             const result = await profileService.insert({ type: newProfile });
             setProfiles([...profiles, result]);
@@ -58,12 +77,15 @@ const ProfilesTable = () => {
             setNewProfile('');
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
     const deleteButton = (rowData) => {
+        const isDeleting = deletingIds.includes(rowData.id);
         return (
-            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} />
+            <Button icon="pi pi-trash" className="p-button-danger" onClick={() => handleDelete(rowData.id)} loading={isDeleting} disabled={isDeleting} />
         )
     }
 
@@ -88,7 +110,7 @@ const ProfilesTable = () => {
                             style={{ textTransform: 'uppercase' }}
                             onChange={(e) => setNewProfile(e.target.value.toUpperCase())}
                         />
-                        <Button label="Adicionar" icon="pi pi-plus" onClick={handleAddProfile} />
+                        <Button label="Adicionar" icon="pi pi-plus" onClick={handleAddProfile} loading={loading} disabled={loading || !newProfile} />
                     </div>
                     <InputText id='search' type="search" placeholder="Buscar por nome" onInput={(e) => fetchProfilesByName(e.target.value)} />
                 </div>
@@ -100,6 +122,7 @@ const ProfilesTable = () => {
         <>
             <DataTable
                 value={profiles}
+                loading={loading}
                 editMode='row'
                 dataKey="id"
                 onRowEditComplete={onRowEditComplete}

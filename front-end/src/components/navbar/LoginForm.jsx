@@ -9,6 +9,7 @@ const LoginForm = ({ onLogin }) => {
     const navigate = useNavigate();
     const authService = new AuthService();
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -31,6 +32,7 @@ const LoginForm = ({ onLogin }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({});
+        setLoading(true);
         try {
             await loginSchema.validate(formData, { abortEarly: false });
         } catch (validationErrors) {
@@ -50,6 +52,8 @@ const LoginForm = ({ onLogin }) => {
             console.log(error.response.data.message);
             console.log(formattedError);
             setErrors(formattedError);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -90,6 +94,8 @@ const LoginForm = ({ onLogin }) => {
                             type="submit"
                             className="w-full"
                             onClick={(handleSubmit)}
+                            loading={loading}
+                            disabled={loading}
                         />
                     </div>
                     <div className="field">

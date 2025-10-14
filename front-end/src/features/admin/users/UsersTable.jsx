@@ -13,31 +13,47 @@ const UsersTable = () => {
     const profileService = new ProfileService();
     const [users, setUsers] = useState([]);
     const [profileOptions, setProfileOptions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [deletingIds, setDeletingIds] = useState([]);
+
+    useEffect(() => {
+        fetchUsers();
+        fetchProfiles();
+    }, [])
 
     async function fetchUsersByName(name) {
+        setLoading(true);
         try {
             const result = await personService.getByName(name);
             setUsers(result.content);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchInactiveUsers() {
+        setLoading(true);
         try {
             const result = await personService.listAllInactive();
             setUsers(result.content);
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchUsers() {
+        setLoading(true);
         try {
             const result = await personService.getAll();
             setUsers(result.content);
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -54,34 +70,42 @@ const UsersTable = () => {
         }
     }
 
-    useEffect(() => {
-        fetchUsers();
-        fetchProfiles();
-    }, [])
-
-    const onRowEditComplete = (e) => {
+    const onRowEditComplete = async (e) => {
         let _users = [...users];
         _users[e.index] = e.newData;
-        setUsers(_users);
         console.log(e.newData);
-        personService.update(e.newData);
+        setLoading(true);
+        try {
+            await personService.update(e.newData);
+        }catch(error){
+            console.log(error);
+        } finally{
+            setLoading(false);
+        }
+        setUsers(_users);
     }
 
     const deleteUser = async (userId) => {
+        setDeletingIds([...deletingIds, userId]);
         try {
             await personService.delete(userId);
             fetchUsers();
         } catch (error) {
             console.log(error);
+        } finally {
+            setDeletingIds(prev => prev.filter(deletingId => deletingId !== userId));
         }
     };
 
     const restoreUser = async (userId) => {
+        setDeletingIds([...deletingIds, userId]);
         try {
             await personService.restore(userId);
             fetchInactiveUsers();
         } catch (error) {
             console.log(error);
+        } finally {
+            setDeletingIds(prev => prev.filter(deletingId => deletingId !== userId));
         }
     };
 
@@ -93,6 +117,8 @@ const UsersTable = () => {
                 onClick={() => {
                     deleteUser(rowData.id);
                 }}
+                loading={deletingIds.includes(rowData.id)}
+                disabled={deletingIds.includes(rowData.id)}
             />
         );
     };
@@ -105,6 +131,8 @@ const UsersTable = () => {
                 onClick={() => {
                     restoreUser(rowData.id);
                 }}
+                loading={deletingIds.includes(rowData.id)}
+                disabled={deletingIds.includes(rowData.id)}
             />
         );
     };
@@ -143,8 +171,8 @@ const UsersTable = () => {
             <>
                 <div id='table-header'>
                     <div>
-                        <Button label="Ativos" icon="pi pi-users" className="p-button-outlined" onClick={fetchUsers} />
-                        <Button label="Inativos" icon="pi pi-user-slash" className="p-button-outlined" onClick={fetchInactiveUsers} />
+                        <Button label="Ativos" icon="pi pi-users" className="p-button-outlined" onClick={fetchUsers} loading={loading} disabled={loading} />
+                        <Button label="Inativos" icon="pi pi-user-slash" className="p-button-outlined" onClick={fetchInactiveUsers} loading={loading} disabled={loading} />
                     </div>
                     <InputText id='search' type="search" placeholder="Buscar por nome" onInput={(e) => fetchUsersByName(e.target.value)} />
                 </div>
@@ -155,6 +183,7 @@ const UsersTable = () => {
     return (
         <DataTable
             value={users}
+            loading={loading}
             editMode='row'
             dataKey="id"
             onRowEditComplete={onRowEditComplete}
