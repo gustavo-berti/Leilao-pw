@@ -51,11 +51,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/people/create").permitAll()
                 .requestMatchers("/api/auctions/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/bids/**").hasAnyRole("BUYER","SELLER")
-                .requestMatchers("/api/categories/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/feedbacks/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/images/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/payment/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/people/**").hasAnyRole("BUYER","SELLER","ADMIN")
+                .requestMatchers("/api/categories/**").hasAnyRole("ADMIN")
                 .requestMatchers("/api/profiles/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
                 .sessionManagement(session -> session
