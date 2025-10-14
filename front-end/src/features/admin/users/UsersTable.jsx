@@ -190,6 +190,7 @@ const UsersTable = () => {
             paginator rows={10}
             header={header}
             resizableColumns columnResizeMode='fit'
+            emptyMessage="Nenhum usuário encontrado."
         >
             <Column field="id" header="ID" sortable style={{ width: '5%' }} />
             <Column field="name" header="Nome" editor={nameEditor} sortable style={{ width: '35%' }} />

@@ -23,6 +23,7 @@ const CategoriesTable = () => {
         try {
             const data = await categoryService.getAll();
             setCategories(data.content);
+            console.log(data);
         } catch (error) {
             console.error("Error fetching categories:", error);
         } finally {
@@ -109,6 +110,7 @@ const CategoriesTable = () => {
                 paginator rows={10}
                 header={header}
                 resizableColumns columnResizeMode='fit'
+                emptyMessage="Nenhuma categoria encontrada."
             >
                 <Column field="id" header="ID" style={{ width: '5%' }}></Column>
                 <Column field="name" header="Nome" editor={nameEditor} style={{ width: '20%' }}></Column>

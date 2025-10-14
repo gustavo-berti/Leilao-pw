@@ -129,6 +129,7 @@ const ProfilesTable = () => {
                 paginator rows={10}
                 header={header}
                 resizableColumns columnResizeMode='fit'
+                emptyMessage="Nenhum perfil encontrado."
             >
                 <Column field="id" header="ID" style={{ width: '5%' }} />
                 <Column field="type" header="Perfil" editor={typeEditor} />
