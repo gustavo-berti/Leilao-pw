@@ -11,9 +11,9 @@ const PerfilPopup = ({ user, onLogout }) => {
             <p>Nome: {user.name}</p>
             <p>Email: {user.email}</p>
             <br />
+            <Button label="Meu perfil" icon="pi pi-user" onClick={() => navigate('/perfil')} />
             {Auth.hasRole(user, "ROLE_ADMIN") && <Button label="Admin" icon="pi pi-cog" onClick={() => navigate('/admin')} />}
             <Button label="Sair" icon="pi pi-sign-out" onClick={onLogout} />
-            <Button label="Alterar Senha" icon="pi pi-lock" onClick={() => navigate('/alterar-senha')} />
         </div>
     );
 }

@@ -19,6 +19,7 @@ function App() {
           localStorage.removeItem('user');
           setUser(null);
           alert('Sua sessão expirou. Por favor, faça login novamente.');
+          window.location.href = '/';
         }
       });
     }
@@ -35,6 +36,7 @@ function App() {
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
           </Route>
           <Route element={<Layouts.PrivateRoute />}>
+            <Route path='/perfil' element={<Pages.Perfil/>}/>
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
           </Route>
           <Route element={<Layouts.AdminRoute />}>
