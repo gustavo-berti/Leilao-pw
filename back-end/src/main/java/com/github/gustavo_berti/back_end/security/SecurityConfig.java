@@ -48,6 +48,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/recover-password/**").permitAll()
                 .requestMatchers("/api/people/change-password").permitAll()
+                .requestMatchers("/actuator/*").permitAll()
+                .requestMatchers("/actuator/metrics/*").permitAll()
                 .requestMatchers("/api/people/create").permitAll()
                 .requestMatchers("/api/auctions/**").hasAnyRole("BUYER","SELLER")
                 .requestMatchers("/api/bids/**").hasAnyRole("BUYER","SELLER")
