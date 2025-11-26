@@ -30,6 +30,11 @@ const Navbar = ({ user, setUser }) => {
       icon: 'pi pi-fw pi-home',
       command: () => { navigate('/'); }
     },
+    {
+      label: 'Leilões',
+      icon: 'pi pi-fw pi-tags',
+      command: () => { navigate('/leiloes'); }
+    } 
   ];
 
   return (

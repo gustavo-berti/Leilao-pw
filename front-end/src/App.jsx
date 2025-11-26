@@ -34,6 +34,7 @@ function App() {
           <Route element={<Layouts.PublicRoute />}>
             <Route path="/registrar" element={<Pages.Register />} />
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
+            <Route path="/leiloes" element={<Pages.Auction />} />
           </Route>
           <Route element={<Layouts.PrivateRoute />}>
             <Route path='/perfil' element={<Pages.Perfil/>}/>
