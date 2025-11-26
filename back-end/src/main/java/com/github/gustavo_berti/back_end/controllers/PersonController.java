@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.gustavo_berti.back_end.dto.ChangePasswordDTO;
 import com.github.gustavo_berti.back_end.dto.PersonListDTO;
+import com.github.gustavo_berti.back_end.dto.PersonUpdateDTO;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.services.PersonService;
 
@@ -59,6 +61,20 @@ public class PersonController {
     @PutMapping
     public ResponseEntity<Person> update(@Valid @RequestBody PersonListDTO person) {
         return ResponseEntity.ok(personService.update(person));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Person> updateByEmail(@RequestParam("email") String email, @Valid @RequestBody PersonUpdateDTO person) {
+        return ResponseEntity.ok(personService.updateByEmail(email, person));
+    }
+
+    @PutMapping("/upload-avatar")
+    public ResponseEntity<Person> uploadAvatar(@RequestParam("email") String email, @RequestParam("avatar") MultipartFile avatar) {
+        try {
+            return ResponseEntity.ok(personService.uploadAvatar(email, avatar.getBytes()));
+        } catch (java.io.IOException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/change-password")

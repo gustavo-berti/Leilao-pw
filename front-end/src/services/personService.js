@@ -33,7 +33,7 @@ class PersonService extends BaseService {
 
     async create(data) {
         data.personProfile = [{
-            profile: {id:2}
+            profile: { id: 2 }
         }];
         try {
             const response = await this.api.post(`${this.endPoint}/create`, data);
@@ -74,6 +74,32 @@ class PersonService extends BaseService {
         }
     }
 
+    async uploadAvatar(file, email) {
+        try {
+            const formData = new FormData();
+            formData.append('avatar', file);
+            formData.append('email', email);
+            const response = await this.api.put(`${this.endPoint}/upload-avatar`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Error uploading avatar:", error);
+            throw error;
+        }
+    }
+
+    async updateByEmail(data) {
+        try {
+            const response = await this.api.put(`${this.endPoint}/update?email=${data.email}`, data);
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao atualizar pessoa por email:', error);
+            throw error;
+        }
+    }
 }
 
 export default PersonService;

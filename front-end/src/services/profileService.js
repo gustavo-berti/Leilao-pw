@@ -14,20 +14,6 @@ class ProfileService extends BaseService{
             throw error;
         }
     }
-
-    async uploadAvatar(file){
-        try {
-            const response = await this.api.post(`${this.endPoint}/upload-avatar`, file, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error("Error uploading avatar:", error);
-            throw error;
-        }
-    }
 }
 
 export default ProfileService

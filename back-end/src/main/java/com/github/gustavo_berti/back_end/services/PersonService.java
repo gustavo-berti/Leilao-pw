@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
 import com.github.gustavo_berti.back_end.dto.PersonListDTO;
+import com.github.gustavo_berti.back_end.dto.PersonUpdateDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.models.PersonProfile;
@@ -77,6 +79,29 @@ public class PersonService implements UserDetailsService {
         return personRepository.save(existingPerson);
     }
 
+    public Person updateByEmail(String email, PersonUpdateDTO person) {
+        Person personToUpdate = personRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("Pessoa não encontrada com email: " + email));
+        if (!email.equals(person.getEmail())) {
+            personRepository.findByEmail(person.getEmail()).ifPresent(existingPersonWithNewEmail -> {
+                if (!existingPersonWithNewEmail.getId().equals(personToUpdate.getId())) {
+                    throw new DataIntegrityViolationException("Este email já está em uso");
+                }
+            });
+        }
+
+        personToUpdate.setName(person.getName());
+        personToUpdate.setEmail(person.getEmail());
+        return personRepository.save(personToUpdate);
+    }
+
+
+    public Person uploadAvatar(String email, byte[] avatar) {
+        Person person = findByEmail(email);
+        person.setAvatar(avatar);
+        return personRepository.save(person);
+    }
+
     public Person changePassword(String email, String newPassword) {
         Person person = findByEmail(email);
         person.setPassword(EncryptPassword(newPassword));
@@ -114,7 +139,7 @@ public class PersonService implements UserDetailsService {
                     return dto;
                 });
     }
-    
+
     public Page<PersonListDTO> findAllInactive(Pageable page) {
         return personRepository.findAllInactive(page)
                 .map(person -> {

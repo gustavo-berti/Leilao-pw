@@ -26,5 +26,17 @@
             margin: 5px 0;
             font-size: 1.2rem;
         }
+
+        .p-button {
+            width: fit-content;
+            align-self: flex-start;
+            margin: 0 5px;
+        }
+
+        .p-inputtext {
+            width: 100%;
+            max-width: 400px;
+            margin: 5px 0;
+        }
     }
 }

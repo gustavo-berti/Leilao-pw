@@ -37,6 +37,7 @@ public class AuthenticatorService {
         personAuthDTO.setRole(personEntity.getPersonProfile() != null && !personEntity.getPersonProfile().isEmpty()
                 ? personEntity.getPersonProfile().get(0).getProfile().getType()
                 : null);
+        personAuthDTO.setProfilePicture(personEntity.getProfilePicture());
         return personAuthDTO;
     }
 

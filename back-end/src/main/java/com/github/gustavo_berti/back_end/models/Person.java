@@ -66,7 +66,7 @@ public class Person implements UserDetails {
     private boolean active;
 
     @Lob
-    @Column(name = "profile_picture", nullable = true)
+    @Column(name = "profile_picture", nullable = true, columnDefinition = "BLOB")
     private byte[] profilePicture;
 
     @Column(name = "person_category", nullable = true)
@@ -101,6 +101,10 @@ public class Person implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public void setAvatar(byte[] avatar) {
+        this.profilePicture = avatar;
     }
 
 }
