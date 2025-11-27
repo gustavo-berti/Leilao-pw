@@ -15,13 +15,14 @@ const Navbar = ({ user, setUser }) => {
   const handleLoginSuccess = (userData) => {
     loginPanel.current.hide();
     setUser(userData);
+    window.location.reload();
   };
 
   const handleLogoutSuccess = () => {
     perfilPanel.current.hide();
     setUser(null);
     localStorage.removeItem('user');
-    navigate('/');
+    window.location.reload();
   };
 
   const items = [

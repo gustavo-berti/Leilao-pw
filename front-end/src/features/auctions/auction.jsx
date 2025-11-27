@@ -1,9 +1,11 @@
 import { Card } from 'primereact/card';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './auction.scss';
-import { Button } from 'primereact/button';
 
 const Auction = () => {
+    const navigate = useNavigate();
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [auctions, setAuctions] = useState([
         { id: 1, title: 'Leilão 1', description: 'Descrição do leilão 1', minimalBid: 100, status: 'ativo', dateHourEnd: '2024-12-31 23:59' },
@@ -37,8 +39,10 @@ const Auction = () => {
                 <h2>Leilões Disponíveis</h2>
                 <div>
                     <Button label="Atualizar Leilões" icon="pi pi-refresh" onClick={fetchAuctions} />
-                    <Button label="Criar Novo Leilão" icon="pi pi-plus" className="p-button-success" />
                     <Button label="Filtrar Leilões" icon="pi pi-filter" className="p-button-info" />
+                    {user ? 
+                        <Button label="Criar Novo Leilão" icon="pi pi-plus" className="p-button-success" onClick={() => navigate('/leiloes/criar')} /> : 
+                        <Button label="Logue para criar leilão" icon="pi pi-sign-in" className="p-button-danger"/>}
                 </div>
             </div>
             <div className='auction-content'>

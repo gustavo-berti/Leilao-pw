@@ -1,0 +1,21 @@
+.form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+
+  > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .select-place {
+    flex: 1.8;
+  }
+
+}

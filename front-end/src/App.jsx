@@ -31,14 +31,15 @@ function App() {
         <Components.Navbar user={user} setUser={setUser} />
         <Routes>
           <Route path="/" element={<Pages.Home />} />
+          <Route path="/leiloes" element={<Pages.Auction />} />
           <Route element={<Layouts.PublicRoute />}>
             <Route path="/registrar" element={<Pages.Register />} />
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
-            <Route path="/leiloes" element={<Pages.Auction />} />
           </Route>
           <Route element={<Layouts.PrivateRoute />}>
             <Route path='/perfil' element={<Pages.Perfil/>}/>
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
+            <Route path="/leiloes/criar" element={<Pages.CreateAuction />} />
           </Route>
           <Route element={<Layouts.AdminRoute />}>
             <Route path="/admin" element={<Pages.Admin />} />
