@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
 import com.github.gustavo_berti.back_end.models.Auction;
 import com.github.gustavo_berti.back_end.services.AuctionService;
 
@@ -30,7 +31,7 @@ public class AuctionController {
     }
 
     @PostMapping
-    public ResponseEntity<Auction> insert(@Valid @RequestBody Auction auction) {
+    public ResponseEntity<Auction> insert(@Valid @RequestBody AuctionCreateDTO auction) {
         return ResponseEntity.ok(auctionService.insert(auction));
     }
 

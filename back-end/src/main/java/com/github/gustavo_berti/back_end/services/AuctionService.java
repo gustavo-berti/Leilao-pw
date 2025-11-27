@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
 import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
@@ -16,10 +17,23 @@ public class AuctionService {
     @Autowired
     private AuctionRepository auctionRepository;
     @Autowired
+    private PersonService personService;
+    @Autowired
     private MessageSource messageSource;
 
-    public Auction insert(Auction auction) {
-        return auctionRepository.save(auction);
+    public Auction insert(AuctionCreateDTO auction) {
+        Auction newAuction = new Auction();
+        newAuction.setTitle(auction.getTitle());
+        newAuction.setDescription(auction.getDescription());
+        newAuction.setDetailedDescription(auction.getDetailedDescription());
+        newAuction.setDateHourStart(auction.getDateHourStart());
+        newAuction.setDateHourEnd(auction.getDateHourEnd());
+        newAuction.setStatus(auction.getStatus());
+        newAuction.setIncrementValue(auction.getIncrementValue());
+        newAuction.setMinimalBid(auction.getMinimalBid());
+        newAuction.setCategory(auction.getCategory());
+        newAuction.setPerson(personService.findByEmail(auction.getUserEmail()));
+        return auctionRepository.save(newAuction);
     }
 
     public Auction update(Auction auction) {

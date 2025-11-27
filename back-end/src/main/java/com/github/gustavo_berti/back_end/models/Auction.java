@@ -67,8 +67,9 @@ public class Auction {
     @ManyToOne()
     @JoinColumn(name = "person_id", nullable = false)
     private Person person;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @NotNull(message = "Categoria não pode ficar em branco")
     private Category category;
     @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", nullable = true)
