@@ -3,6 +3,8 @@ package com.github.gustavo_berti.back_end.models;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.gustavo_berti.back_end.models.enums.AuctionStatus;
 
 import jakarta.persistence.CascadeType;
@@ -64,8 +66,9 @@ public class Auction {
     @NotNull(message = "Valor mínimo não pode ficar em branco")
     private Double minimalBid;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonIgnoreProperties({"passrword","validationCode","validationCodeExpiry","active","profilePicture","categories","auctions","personProfile"})
     private Person person;
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
@@ -73,10 +76,12 @@ public class Auction {
     private Category category;
     @OneToOne(optional = true, cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id", nullable = true)
+    @JsonIgnore
     private Payment payment;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "bid_id", nullable = true)
+    @JsonIgnore
     private List<Bid> bids;
 }

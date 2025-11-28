@@ -1,33 +1,57 @@
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './auction.scss';
+import AuctionService from '../../services/auctionService';
 
 const Auction = () => {
     const navigate = useNavigate();
+    const auctionService = new AuctionService();
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-    const [auctions, setAuctions] = useState([
-        { id: 1, title: 'Leilão 1', description: 'Descrição do leilão 1', minimalBid: 100, status: 'ativo', dateHourEnd: '2024-12-31 23:59' },
-        { id: 2, title: 'Leilão 2', description: 'Descrição do leilão 2', minimalBid: 200, status: 'ativo', dateHourEnd: '2024-11-30 23:59' },
-        { id: 3, title: 'Leilão 3', description: 'Descrição do leilão 3', minimalBid: 300, status: 'encerrado', dateHourEnd: '2024-10-31 23:59' },
-    ]);
+    const [auctions, setAuctions] = useState([]);
+    const [currentTime, setCurrentTime] = useState(new Date());
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+    const SECOND = 1000;
+    const MINUTE = SECOND * 60;
+    const HOUR = MINUTE * 60;
+    const DAY = HOUR * 24;
+
+    useEffect(() => {
+        fetchAuctions();
+
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     const calculateTimeRemaining = (endDate) => {
-        return endDate; // Implementar cálculo real de tempo restante
+        const diff = new Date(endDate) - currentTime;
+        if (diff <= 0) return "Leilão Encerrado";
+        const days = Math.floor(diff / DAY);
+        const hours = Math.floor((diff % DAY) / HOUR);
+        const minutes = Math.floor((diff % HOUR) / MINUTE);
+        const seconds = Math.floor((diff % MINUTE) / SECOND);
+        endDate = `${days > 0 ? days + "d " : ""}${hours > 0 ? hours + "h " : ""}${minutes > 0 ? minutes + "m " : ""}${seconds}s`;
+        return endDate;
     }
 
     const fetchAuctions = async () => {
-        // Lógica para buscar leilões da API
+        const data = await auctionService.getAll();
+        setAuctions(data.content);
+        console.log(data);
     }
 
     const renderAuctionCards = () => {
         return auctions.map(auction => (
-            <Card 
-                key={auction.id} 
-                title={auction.title} 
-                subTitle={`Lance Mínimo: R$ ${auction.minimalBid} - Status: ${auction.status} - Término: ${calculateTimeRemaining(auction.dateHourEnd)}`} 
-                footer={user ? <Button label="Participar do Leilão" icon="pi pi-gavel"/> : <strong>Faça login para participar</strong>}>
+            <Card
+                key={auction.id}
+                title={`${auction.title} - ${auction.status}`}
+                subTitle={`Lance Mínimo: R$ ${auction.minimalBid} - Término: ${calculateTimeRemaining(auction.dateHourEnd)}`}
+                footer={user ? <Button label="Participar do Leilão" icon="pi pi-gavel" /> : <strong>Faça login para participar</strong>}>
                 {auction.description}
             </Card>
         ));
@@ -40,9 +64,9 @@ const Auction = () => {
                 <div>
                     <Button label="Atualizar Leilões" icon="pi pi-refresh" onClick={fetchAuctions} />
                     <Button label="Filtrar Leilões" icon="pi pi-filter" className="p-button-info" />
-                    {user ? 
-                        <Button label="Criar Novo Leilão" icon="pi pi-plus" className="p-button-success" onClick={() => navigate('/leiloes/criar')} /> : 
-                        <Button label="Logue para criar leilão" icon="pi pi-sign-in" className="p-button-danger"/>}
+                    {user ?
+                        <Button label="Criar Novo Leilão" icon="pi pi-plus" className="p-button-success" onClick={() => navigate('/leiloes/criar')} /> :
+                        <Button label="Logue para criar leilão" icon="pi pi-sign-in" className="p-button-danger" />}
                 </div>
             </div>
             <div className='auction-content'>

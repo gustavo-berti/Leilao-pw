@@ -14,7 +14,7 @@ import './createAuction.scss';
 const createAuction = () => {
   const categoryService = new CategoryService();
   const auctionService = new AuctionService();
-  const navigate = new useNavigate();
+  const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -40,7 +40,6 @@ const createAuction = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    console.log(formData);
   };
 
   const handleNumberChange = (name, value) => {
@@ -51,7 +50,6 @@ const createAuction = () => {
     setIsLoading(true);
     try {
       const response = await auctionService.insert(formData, user.email);
-      console.log('Leilão criado com sucesso:', response);
       navigate('/leiloes');
     } catch (error) {
       const errorObj = {};

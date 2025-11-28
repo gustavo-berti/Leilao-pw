@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/*").permitAll()
                 .requestMatchers("/actuator/metrics/*").permitAll()
                 .requestMatchers("/api/people/create").permitAll()
+                .requestMatchers("/api/auctions/list").permitAll()
                 .requestMatchers("/api/bids/**").hasAnyRole("BUYER","SELLER","ADMIN")
                 .requestMatchers("/api/feedbacks/**").hasAnyRole("BUYER","SELLER","ADMIN")
                 .requestMatchers("/api/images/**").hasAnyRole("BUYER","SELLER","ADMIN")

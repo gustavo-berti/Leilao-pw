@@ -25,8 +25,8 @@ public class AuctionController {
     @Autowired
     private AuctionService auctionService;
 
-    @GetMapping
-    public ResponseEntity<Page<Auction>> findAll(Pageable page) {
+    @GetMapping("/list")
+    public ResponseEntity<Page<AuctionCreateDTO>> findAll(Pageable page) {
         return ResponseEntity.ok(auctionService.findAll(page));
     }
 

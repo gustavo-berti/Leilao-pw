@@ -50,8 +50,22 @@ public class AuctionService {
         auctionRepository.delete(auction);
     }
 
-    public Page<Auction> findAll (Pageable pageable){
-        return auctionRepository.findAll(pageable);
+    public Page<AuctionCreateDTO> findAll (Pageable pageable){
+        return auctionRepository.findAll(pageable).map(auction -> {
+                    AuctionCreateDTO dto = new AuctionCreateDTO();
+                    dto.setId(auction.getId());
+                    dto.setTitle(auction.getTitle());
+                    dto.setDescription(auction.getDescription());
+                    dto.setDetailedDescription(auction.getDetailedDescription());
+                    dto.setDateHourStart(auction.getDateHourStart());
+                    dto.setDateHourEnd(auction.getDateHourEnd());
+                    dto.setStatus(auction.getStatus());
+                    dto.setIncrementValue(auction.getIncrementValue());
+                    dto.setMinimalBid(auction.getMinimalBid());
+                    dto.setCategory(auction.getCategory());
+                    dto.setUserEmail(auction.getPerson().getEmail());
+                    return dto;
+                });
     }
 
     public Auction findById(Long id){

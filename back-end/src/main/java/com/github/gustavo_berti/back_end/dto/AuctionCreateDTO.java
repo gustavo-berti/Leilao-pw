@@ -13,6 +13,7 @@ import lombok.Data;
 
 @Data
 public class AuctionCreateDTO {
+    private Long id;
     @NotBlank(message = "Título não pode ficar em branco")
     private String title;
     @NotBlank(message = "Descrição não pode ficar em branco")

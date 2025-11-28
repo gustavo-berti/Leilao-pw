@@ -11,7 +11,7 @@ const Admin = () => {
     return (
         <LongContainer>
             <h1>Painel Administrativo</h1>
-            <div className="row">
+            <div className="admin-row">
                 <Button id='users' label="Usuários" icon="pi pi-users" onClick={() => setActiveTab('users')}/>
                 <Button id='profiles' label="Perfis" icon="pi pi-user" onClick={() => setActiveTab('profiles')} />
                 <Button id='categories' label="Categorias" icon="pi pi-tags" onClick={() => setActiveTab('categories')} />

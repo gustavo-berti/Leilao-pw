@@ -1,11 +1,10 @@
 @use '../../vars.scss' as vars;
 
-.row {
+.admin-row {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
     gap: 5px;
-
 }
 
 .content {
