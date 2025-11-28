@@ -6,19 +6,23 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from "primereact/button";
 import { Dropdown } from 'primereact/dropdown';
 import { Calendar } from 'primereact/calendar';
+import { FileUpload } from 'primereact/fileupload';
 import LongContainer from "../../../components/longContainer/longContainer"
 import CategoryService from "../../../services/categoryService";
 import AuctionService from "../../../services/auctionService";
+import ImageService from "../../../services/imageService";
 import './createAuction.scss';
 
 const createAuction = () => {
   const categoryService = new CategoryService();
   const auctionService = new AuctionService();
+  const imageService = new ImageService();  
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [errors, setErrors] = useState({});
+  const [images, setImages] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -46,13 +50,25 @@ const createAuction = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleFileSelect = (e) => {
+    setImages(e.files);
+  };
+
   const saveAuction = async () => {
     setIsLoading(true);
     try {
       const response = await auctionService.insert(formData, user.email);
+      if (images.length > 0) {
+        const formDataImages = new FormData();
+        images.forEach((image) => {
+          formDataImages.append('images', image);
+        });
+        await imageService.uploadImages(response.id, formDataImages);
+      }
       navigate('/leiloes');
     } catch (error) {
       const errorObj = {};
+      console.log(error);
       error.response.data.details.forEach(detail => {
         const [field, message] = detail.split(': ');
         errorObj[field] = message;
@@ -141,9 +157,27 @@ const createAuction = () => {
               {errors.detailedDescription && <small className="p-error">{errors.detailedDescription}</small>}
             </div>
           </div>
+          <div className="row">
+            <FileUpload
+              name="images[]" multiple
+              accept="image/*"
+              maxFileSize={1000000}
+              auto={false}
+              customUpload
+              onSelect={handleFileSelect}
+              emptyTemplate={
+                <div className="drag-drop">
+                  <i className="pi pi-image"></i>
+                  <span> Arraste e solte as imagens aqui </span>
+                </div>
+              }
+            />
+            {errors.images && <small className="p-error">{errors.images}</small>}
+          </div>
           <Button className="p-button-success"
             onClick={() => saveAuction()}
             disabled={isLoading}
+            loading={isLoading}
           >
             Criar Leilão
           </Button >

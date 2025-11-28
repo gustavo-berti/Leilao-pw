@@ -14,8 +14,6 @@ const Auction = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(6);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState({});
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
     const HOUR = MINUTE * 60;

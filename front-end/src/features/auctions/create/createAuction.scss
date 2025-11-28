@@ -1,11 +1,51 @@
 .form {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    
-    .p-button {
-        margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .p-button {
+    margin-top: 15px;
+  }
+
+  .p-fileupload {
+    width: 100%;
+    margin-top: 10px;
+
+    .p-fileupload-content {
+      height: fit-content;
+      overflow-y: auto;
+      padding: 20px;
     }
+
+    .p-fileupload-buttonbar {
+      padding: 10px;
+    }
+
+    .p-fileupload-row {
+      padding: 7px;
+    }
+
+    .p-button {
+      margin-top: 0;
+    }
+  }
+
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 10px 15px !important;
+}
+
+.drag-drop {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5em;
+  text-align: center;
+  padding: 20px 0;
+
+  .pi-image {
+    font-size: 2em;
+  }
 }
 
 .row {
@@ -13,7 +53,7 @@
   width: 100%;
   gap: 5px;
 
-  > * {
+  >* {
     flex: 1 1 0;
     min-width: 0;
   }

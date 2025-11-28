@@ -78,7 +78,7 @@ public class Auction {
     @JoinColumn(name = "payment_id", nullable = true)
     @JsonIgnore
     private Payment payment;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Image> images;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "bid_id", nullable = true)

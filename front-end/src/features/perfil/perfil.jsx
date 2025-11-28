@@ -15,6 +15,8 @@ const Perfil = () => {
     const personService = new PersonService();
     const [isEditing, setIsEditing] = useState(false);
     const [avatar, setAvatar] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const [userData, setUserData] = useState({
         name: user.name,
         email: user.email
