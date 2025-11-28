@@ -19,6 +19,7 @@ public class ProfileService {
     private MessageSource messageSource;
 
     public Profile insert(Profile profile) {
+        validateDuplicateProfileName(profile);
         return profileRepository.save(profile);
     }
 
@@ -28,12 +29,12 @@ public class ProfileService {
         return profileRepository.save(existingProfile);
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         Profile profile = findById(id);
         profileRepository.delete(profile);
     }
 
-    public Page<Profile> findAll(Pageable page){
+    public Page<Profile> findAll(Pageable page) {
         return profileRepository.findAll(page);
     }
 
@@ -44,6 +45,15 @@ public class ProfileService {
 
     public Page<Profile> findByName(String profile, Pageable page) {
         return profileRepository.findByName(profile, page);
+    }
+
+    private void validateDuplicateProfileName(Profile profile) {
+        Profile existingProfile = profileRepository.findByType(profile.getType());
+        if (existingProfile != null && !existingProfile.getType().equals(profile.getType())) {
+            throw new IllegalArgumentException(
+                    messageSource.getMessage("profile.duplicateName", new Object[] { profile.getType() },
+                            LocaleContextHolder.getLocale()));
+        }
     }
 
 }
