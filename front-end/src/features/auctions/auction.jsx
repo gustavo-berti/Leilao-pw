@@ -1,9 +1,10 @@
+import { useState, useEffect } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
+import { Paginator } from 'primereact/paginator';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import './auction.scss';
 import AuctionService from '../../services/auctionService';
+import './auction.scss';
 
 const Auction = () => {
     const navigate = useNavigate();
@@ -11,6 +12,8 @@ const Auction = () => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [auctions, setAuctions] = useState([]);
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [first, setFirst] = useState(0);
+    const [rows, setRows] = useState(6);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
     const SECOND = 1000;
@@ -45,8 +48,14 @@ const Auction = () => {
         console.log(data);
     }
 
+    const onPageChange = (event) => {
+        setFirst(event.first);
+        setRows(event.rows);
+    };
+
     const renderAuctionCards = () => {
-        return auctions.map(auction => (
+        const paginatedAuctions = auctions.slice(first, first + rows);
+        return paginatedAuctions.map(auction => (
             <Card
                 key={auction.id}
                 title={`${auction.title} - ${auction.status}`}
@@ -72,6 +81,12 @@ const Auction = () => {
             <div className='auction-content'>
                 {renderAuctionCards()}
             </div>
+            <Paginator
+                first={first}
+                rows={rows}
+                totalRecords={auctions.length}
+                onPageChange={onPageChange}
+            />
         </>
     );
 };
