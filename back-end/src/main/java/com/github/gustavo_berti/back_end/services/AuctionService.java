@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
+import com.github.gustavo_berti.back_end.dto.AuctionDetailDTO;
 import com.github.gustavo_berti.back_end.dto.AuctionListDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
@@ -70,6 +71,24 @@ public class AuctionService {
                     dto.setCategory(auction.getCategory());
                     return dto;
                 });
+    }
+
+    public AuctionDetailDTO getDetail(Long id){
+        Auction existingAuction = findById(id);
+        AuctionDetailDTO dto = new AuctionDetailDTO();
+        dto.setId(id);
+        dto.setTitle(existingAuction.getTitle());
+        dto.setCategory(existingAuction.getCategory());
+        dto.setDescription(existingAuction.getDescription());
+        dto.setDetailedDescription(existingAuction.getDetailedDescription());
+        dto.setDateHourStart(existingAuction.getDateHourStart());
+        dto.setDateHourEnd(existingAuction.getDateHourEnd());
+        dto.setStatus(existingAuction.getStatus());
+        dto.setMinimalBid(existingAuction.getMinimalBid());
+        dto.setIncrementValue(existingAuction.getIncrementValue());
+        dto.setUserEmail(existingAuction.getPerson().getEmail());
+        dto.setUserName(existingAuction.getPerson().getName());
+        return dto;
     }
 
     public Auction findById(Long id){

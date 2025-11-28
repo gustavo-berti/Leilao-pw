@@ -6,3 +6,4 @@ export { default as Admin } from "./admin/admin.jsx";
 export { default as Perfil } from "./perfil/perfil.jsx"
 export { default as Auction } from "./auctions/auction.jsx"
 export { default as CreateAuction } from "./auctions/create/createAuction.jsx"
+export { default as AuctionDetail } from "./auctions/detail/auctionDetail.jsx"

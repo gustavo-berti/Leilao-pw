@@ -31,6 +31,15 @@ class AuctionService extends BaseService {
             throw error;
         }
     }
+
+    async findById(id) {
+        try {
+            const response = await this.api.get(`${this.endPoint}/${id}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default AuctionService;

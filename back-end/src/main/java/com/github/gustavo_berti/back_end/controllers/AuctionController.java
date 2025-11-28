@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
+import com.github.gustavo_berti.back_end.dto.AuctionDetailDTO;
 import com.github.gustavo_berti.back_end.dto.AuctionListDTO;
 import com.github.gustavo_berti.back_end.models.Auction;
 import com.github.gustavo_berti.back_end.services.AuctionService;
@@ -30,6 +31,11 @@ public class AuctionController {
     public ResponseEntity<Page<AuctionListDTO>> findAll(Pageable page) {
         return ResponseEntity.ok(auctionService.findAll(page));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AuctionDetailDTO> findById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(auctionService.getDetail(id));
+    }   
 
     @PostMapping
     public ResponseEntity<Auction> insert(@Valid @RequestBody AuctionCreateDTO auction) {
