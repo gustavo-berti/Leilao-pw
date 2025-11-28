@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
+import com.github.gustavo_berti.back_end.dto.AuctionListDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
 import com.github.gustavo_berti.back_end.models.Person;
@@ -57,20 +58,16 @@ public class AuctionService {
         auctionRepository.delete(auction);
     }
 
-    public Page<AuctionCreateDTO> findAll (Pageable pageable){
+    public Page<AuctionListDTO> findAll (Pageable pageable){
         return auctionRepository.findAll(pageable).map(auction -> {
-                    AuctionCreateDTO dto = new AuctionCreateDTO();
+                    AuctionListDTO dto = new AuctionListDTO();
                     dto.setId(auction.getId());
                     dto.setTitle(auction.getTitle());
                     dto.setDescription(auction.getDescription());
-                    dto.setDetailedDescription(auction.getDetailedDescription());
-                    dto.setDateHourStart(auction.getDateHourStart());
                     dto.setDateHourEnd(auction.getDateHourEnd());
                     dto.setStatus(auction.getStatus());
-                    dto.setIncrementValue(auction.getIncrementValue());
                     dto.setMinimalBid(auction.getMinimalBid());
                     dto.setCategory(auction.getCategory());
-                    dto.setUserEmail(auction.getPerson().getEmail());
                     return dto;
                 });
     }

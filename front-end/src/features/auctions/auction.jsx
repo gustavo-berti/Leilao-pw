@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { Paginator } from 'primereact/paginator';
-import { Carousel } from 'primereact/carousel';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { useNavigate } from 'react-router-dom';
 import AuctionService from '../../services/auctionService';
 import AuctionCover from './AuctionCover';
@@ -17,6 +17,7 @@ const Auction = () => {
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(6);
     const [totalElements, setTotalElements] = useState(0);
+    const [loading, setLoading] = useState(false);
     const SECOND = 1000;
     const MINUTE = SECOND * 60;
     const HOUR = MINUTE * 60;
@@ -62,7 +63,7 @@ const Auction = () => {
                     key={auction.id}
                     title={`${auction.title} - ${auction.status}`}
                     subTitle={`Lance Mínimo: R$ ${auction.minimalBid} - Término: ${calculateTimeRemaining(auction.dateHourEnd)}`}
-                    footer={user ? <Button label="Participar do Leilão" icon="pi pi-gavel" /> : <strong>Faça login para participar</strong>}>
+                    footer={user ? <Button label="Participar do Leilão" icon="pi pi-gavel" onClick={() => navigate(`/leiloes/${auction.id}`)} /> : <strong>Faça login para participar</strong>}>
                     <AuctionCover auctionId={auction.id} />
                     <p>{auction.description}</p>
                 </Card>
@@ -83,7 +84,7 @@ const Auction = () => {
                 </div>
             </div>
             <div className='auction-content'>
-                {renderAuctionCards()}
+                {loading ? <ProgressSpinner /> : renderAuctionCards()}
             </div>
             <Paginator
                 first={first}
