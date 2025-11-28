@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
+import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
 
 @Service
@@ -22,6 +23,10 @@ public class AuctionService {
     private MessageSource messageSource;
 
     public Auction insert(AuctionCreateDTO auction) {
+        validateAuctionDates(auction);
+        if (auction.getMinimalBid() <= 0) {
+            throw new IllegalArgumentException("Valor do lance mínimo deve ser maior que zero.");
+        }
         Auction newAuction = new Auction();
         newAuction.setTitle(auction.getTitle());
         newAuction.setDescription(auction.getDescription());
@@ -36,12 +41,14 @@ public class AuctionService {
         return auctionRepository.save(newAuction);
     }
 
-    public Auction update(Auction auction) {
+    public Auction update(AuctionCreateDTO auction) {
+        validateAuctionDates(auction);
         Auction existingAuction = findById(auction.getId());
+        validateBidValues(auction, existingAuction);
+        validateUser(auction, existingAuction);
         existingAuction.setTitle(auction.getTitle());
         existingAuction.setDescription(auction.getDescription());
         existingAuction.setStatus(auction.getStatus());
-        existingAuction.setObservations(auction.getObservations());
         return auctionRepository.save(existingAuction);
     }
 
@@ -74,4 +81,27 @@ public class AuctionService {
                     new Object[] {id}, LocaleContextHolder.getLocale())));
     }
 
+    private void validateAuctionDates(AuctionCreateDTO auction) {
+        if (auction.getDateHourEnd().before(auction.getDateHourStart())) {
+            throw new IllegalArgumentException("Data de término deve ser posterior à data de início.");
+        }
+    }
+
+    private void validateUser(AuctionCreateDTO auction, Auction existingAuction) {
+        Person user = personService.findByEmail(auction.getUserEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("Usuário não encontrado.");
+        }
+        if (user.getId() != existingAuction.getPerson().getId()) {
+            throw new IllegalArgumentException("Usuário não autorizado a atualizar este leilão.");
+        }
+    }
+
+    private void validateBidValues(AuctionCreateDTO auction, Auction existingAuction) {
+        if (auction.getIncrementValue() <= 0) {
+            throw new IllegalArgumentException("Valor do incremento deve ser maior que zero.");
+        } if (auction.getIncrementValue() <= existingAuction.getIncrementValue()) {
+            throw new IllegalArgumentException("Valor do incremento deve ser maior que o valor atual.");
+        } 
+    }
 }

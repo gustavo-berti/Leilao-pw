@@ -36,7 +36,7 @@ public class AuctionController {
     }
 
     @PutMapping
-    public ResponseEntity<Auction> update(@Valid @RequestBody Auction auction) {
+    public ResponseEntity<Auction> update(@Valid @RequestBody AuctionCreateDTO auction) {
         return ResponseEntity.ok(auctionService.update(auction));
     }
 
