@@ -17,6 +17,27 @@ class ImageService extends BaseService {
             throw error;
         }
     }
+
+    async getImagesByAuctionId(auctionId) {
+        try {
+            const response = await this.api.get(`${this.endPoint}/auction/${auctionId}`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getImageUrl(imageName) {
+        try {
+            const response = await this.api.get(`/${this.endPoint}/file/${imageName}`, {
+                responseType: 'blob'
+            });
+            const objectURL = URL.createObjectURL(response.data);
+            return objectURL;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default ImageService;

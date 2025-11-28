@@ -86,6 +86,10 @@ public class ImageService {
         return imageRepository.findAll(pageable);
     }
 
+    public List<Image> findByAuctionId(Long auctionId) {
+        return imageRepository.findByAuctionId(auctionId);
+    }
+
     public Image findById(Long id) {
         return imageRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("image.notfound",

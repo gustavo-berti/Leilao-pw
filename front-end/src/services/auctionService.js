@@ -18,9 +18,14 @@ class AuctionService extends BaseService {
         }
     }
 
-    async getAll() {
+    async getAll(page, size) {
         try {
-            const response = await this.api.get(`${this.endPoint}/list`);
+            const response = await this.api.get(`${this.endPoint}/list`, {
+                params: {
+                    page,
+                    size
+                }
+            });
             return response.data;
         } catch (error) {
             throw error;

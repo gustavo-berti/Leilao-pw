@@ -1,10 +1,16 @@
 package com.github.gustavo_berti.back_end.controllers;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +39,38 @@ public class ImageController {
         return ResponseEntity.ok(imageService.findAll(pageable));
     }
 
+    @GetMapping("/auction/{auctionId}")
+    public ResponseEntity<List<Image>> findByAuctionId(@PathVariable("auctionId") Long auctionId) {
+        return ResponseEntity.ok(imageService.findByAuctionId(auctionId));
+    }
+
+    @GetMapping("/file/{filename}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get("uploads/images/").resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<Image> insert(@Valid @RequestBody Image image) {
         return ResponseEntity.ok(imageService.insert(image));
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<List<Image>> uploadImages(@RequestParam("auctionId") Long auctionId, @RequestParam("images") MultipartFile[] images) {
+    public ResponseEntity<List<Image>> uploadImages(@RequestParam("auctionId") Long auctionId,
+            @RequestParam("images") MultipartFile[] images) {
         return ResponseEntity.ok(imageService.uploadImages(auctionId, images));
     }
 
