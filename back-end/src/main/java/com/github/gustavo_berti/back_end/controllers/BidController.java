@@ -42,6 +42,11 @@ public class BidController {
         return ResponseEntity.ok(bidService.findAll(pageable));
     }
 
+    @GetMapping("/value/{auctionId}")
+    public ResponseEntity<Double> fetchValue(@PathVariable("auctionId") Long auctionId) {
+        return ResponseEntity.ok(bidService.fetchValue(auctionId));
+    }
+
     @PostMapping
     public ResponseEntity<Bid> insert(@Valid @RequestBody Bid bid) {
         return ResponseEntity.ok(bidService.insert(bid));

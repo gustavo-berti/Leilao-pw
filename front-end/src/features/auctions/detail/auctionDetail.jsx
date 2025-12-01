@@ -7,15 +7,16 @@ import LongContainer from "../../../components/longContainer/longContainer";
 import AuctionService from "../../../services/auctionService";
 import AuctionCover from "../AuctionCover";
 import websocketService from "../../../services/websocketService";
+import BidService from "../../../services/bidService";
 
 const auctionDetail = () => {
     const auctionService = new AuctionService();
+    const bidService = new BidService();
     const { id } = useParams();
     const [auction, setAuction] = useState([]);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [currentTime, setCurrentTime] = useState(new Date());
-    const [bidValue, setBidValue] = useState(auction.minimalBid);
-    const [currentBid, setCurrentBid] = useState(0);
+    const [bidValue, setBidValue] = useState(0);
 
     useEffect(() => {
         fecthAuction();
@@ -34,27 +35,20 @@ const auctionDetail = () => {
     const fecthAuction = async () => {
         const data = await auctionService.findById(id);
         setAuction(data);
-        setCurrentBid(data.minimalBid);
-        setBidValue(data.minimalBid + data.incrementValue);
+        const currentValue = await bidService.fetchValue(id);
+        setBidValue(currentValue || 0);
     }
 
     const handleNewBid = (bid) => {
-        setCurrentBid(bid.bidValue);
-        setBidValue(bid.bidValue + auction.incrementValue);
+        setBidValue(prevBid => prevBid + bid.bidValue);
     }
 
     const placeBid = () => {
-        if (bidValue < currentBid + auction.incrementValue) {
-            alert('O lance deve ser maior que o lance atual mais o incremento');
-            return;
-        }
-
         const bid = {
             auctionId: auction.id,
-            bidValue: bidValue,
+            bidValue: bidValue ? auction.incrementValue : auction.minimalBid,
             userEmail: user.email
         };
-
         websocketService.sendBid(bid);
     }
 
@@ -68,7 +62,8 @@ const auctionDetail = () => {
                     </div>
                     <div>
                         <p><strong>Descrição:</strong> {auction.detailedDescription}</p>
-                        <p><strong>Valor Inicial:</strong> R$ {auction.minimalBid}</p>
+                        <p><strong>Valor Atual:</strong> {bidValue ? "R$ " + bidValue : "Sem lance"}</p>
+                        <p><strong>Lance Minimo:</strong> R$ {auction.minimalBid}</p>
                         <p><strong>Valor do Incremento:</strong> R$ {auction.incrementValue}</p>
                         <p><strong>Data de Início:</strong> {formatDateBR(auction.dateHourStart)}</p>
                         <p><strong>Data de Término:</strong> {calculateTimeRemaining(auction.dateHourEnd)}</p>

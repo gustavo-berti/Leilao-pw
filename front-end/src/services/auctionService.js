@@ -7,7 +7,6 @@ class AuctionService extends BaseService {
 
     async insert(data, email) {
         try {
-            data.incrementValue = 0;
             data.dateHourStart = new Date().toISOString();
             data.status = "OPEN";
             data.userEmail = email;

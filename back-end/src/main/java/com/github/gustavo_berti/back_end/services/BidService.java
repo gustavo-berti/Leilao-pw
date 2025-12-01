@@ -1,6 +1,7 @@
 package com.github.gustavo_berti.back_end.services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -65,6 +66,18 @@ public class BidService {
         return bidRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("bid.notfound", 
                     new Object[]{ id }, LocaleContextHolder.getLocale())));
+    }
+
+    public Double fetchValue(Long auctionId) {
+        List<Bid> bids = bidRepository.findByAuctionID(auctionId);
+        if (bids.isEmpty()) {
+            return 0.0;
+        }
+        double value = 0;
+        for (Bid bid : bids) {
+            value += bid.getAmount();
+        }
+        return value;
     }
 
 }
