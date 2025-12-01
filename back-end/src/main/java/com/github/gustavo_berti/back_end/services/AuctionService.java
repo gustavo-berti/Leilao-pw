@@ -1,10 +1,14 @@
 package com.github.gustavo_berti.back_end.services;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
@@ -13,7 +17,9 @@ import com.github.gustavo_berti.back_end.dto.AuctionListDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
 import com.github.gustavo_berti.back_end.models.Person;
+import com.github.gustavo_berti.back_end.models.enums.AuctionStatus;
 import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
+import com.github.gustavo_berti.back_end.specifications.AuctionSpecification;
 
 @Service
 public class AuctionService {
@@ -21,6 +27,8 @@ public class AuctionService {
     private AuctionRepository auctionRepository;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private BidService bidService;
     @Autowired
     private MessageSource messageSource;
 
@@ -59,21 +67,21 @@ public class AuctionService {
         auctionRepository.delete(auction);
     }
 
-    public Page<AuctionListDTO> findAll (Pageable pageable){
+    public Page<AuctionListDTO> findAll(Pageable pageable) {
         return auctionRepository.findAll(pageable).map(auction -> {
-                    AuctionListDTO dto = new AuctionListDTO();
-                    dto.setId(auction.getId());
-                    dto.setTitle(auction.getTitle());
-                    dto.setDescription(auction.getDescription());
-                    dto.setDateHourEnd(auction.getDateHourEnd());
-                    dto.setStatus(auction.getStatus());
-                    dto.setMinimalBid(auction.getMinimalBid());
-                    dto.setCategory(auction.getCategory());
-                    return dto;
-                });
+            AuctionListDTO dto = new AuctionListDTO();
+            dto.setId(auction.getId());
+            dto.setTitle(auction.getTitle());
+            dto.setDescription(auction.getDescription());
+            dto.setDateHourEnd(auction.getDateHourEnd());
+            dto.setStatus(auction.getStatus());
+            dto.setValue(bidService.fetchValue(auction.getId()));
+            dto.setCategory(auction.getCategory());
+            return dto;
+        });
     }
 
-    public AuctionDetailDTO getDetail(Long id){
+    public AuctionDetailDTO getDetail(Long id) {
         Auction existingAuction = findById(id);
         AuctionDetailDTO dto = new AuctionDetailDTO();
         dto.setId(id);
@@ -91,10 +99,10 @@ public class AuctionService {
         return dto;
     }
 
-    public Auction findById(Long id){
+    public Auction findById(Long id) {
         return auctionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(messageSource.getMessage("auction.notfound",
-                    new Object[] {id}, LocaleContextHolder.getLocale())));
+                        new Object[] { id }, LocaleContextHolder.getLocale())));
     }
 
     private void validateAuctionDates(AuctionCreateDTO auction) {
@@ -116,8 +124,31 @@ public class AuctionService {
     private void validateBidValues(AuctionCreateDTO auction, Auction existingAuction) {
         if (auction.getIncrementValue() <= 0) {
             throw new IllegalArgumentException("Valor do incremento deve ser maior que zero.");
-        } if (auction.getIncrementValue() <= existingAuction.getIncrementValue()) {
+        }
+        if (auction.getIncrementValue() <= existingAuction.getIncrementValue()) {
             throw new IllegalArgumentException("Valor do incremento deve ser maior que o valor atual.");
-        } 
+        }
+    }
+
+    public Page<AuctionListDTO> findByFilter(Pageable page, String orderBy, String direction, String title,
+            Date dateHourEnd, Long categoryId, AuctionStatus status) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction != null ? direction : "ASC"),orderBy != null ? orderBy : "id");
+        Pageable sortedPageable = PageRequest.of(
+                page.getPageNumber(),
+                page.getPageSize(),
+                sort);
+        return auctionRepository.findAll(
+                AuctionSpecification.withFilters(title, dateHourEnd, categoryId, status),
+                sortedPageable).map(auction -> {
+                    AuctionListDTO dto = new AuctionListDTO();
+                    dto.setId(auction.getId());
+                    dto.setTitle(auction.getTitle());
+                    dto.setDescription(auction.getDescription());
+                    dto.setDateHourEnd(auction.getDateHourEnd());
+                    dto.setStatus(auction.getStatus());
+                    dto.setValue(bidService.fetchValue(auction.getId()));
+                    dto.setCategory(auction.getCategory());
+                    return dto;
+                });
     }
 }

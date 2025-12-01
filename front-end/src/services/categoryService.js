@@ -14,6 +14,11 @@ class CategoryService extends BaseService{
             throw error;
         }
     }
+    
+    async getAll(){
+        const response = await this.api.get(`${this.endPoint}/list`);
+        return response.data;
+    }
 }
 
 export default CategoryService

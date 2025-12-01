@@ -17,12 +17,11 @@ class AuctionService extends BaseService {
         }
     }
 
-    async getAll(page, size) {
+    async getAll(page, size, title = "", dateHourEnd = "", categoryId = "", status = "", orderBy = "", direction = "") {
         try {
             const response = await this.api.get(`${this.endPoint}/list`, {
                 params: {
-                    page,
-                    size
+                    page, size, title, dateHourEnd, categoryId, status, orderBy, direction
                 }
             });
             return response.data;

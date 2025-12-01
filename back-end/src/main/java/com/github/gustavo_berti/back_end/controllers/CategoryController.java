@@ -24,7 +24,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<Page<CategoryListDTO>> findAll(Pageable page){
         return ResponseEntity.ok(categoryService.findAll(page));
     }

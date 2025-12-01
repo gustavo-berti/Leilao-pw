@@ -23,8 +23,8 @@ public class AuctionListDTO {
     private Date dateHourEnd;
     @NotNull(message = "Status não pode ficar em branco")
     private AuctionStatus status;
-    @NotNull(message = "Valor mínimo não pode ficar em branco")
-    private Double minimalBid;
+    @NotNull(message = "Valor atual não pode ficar em branco")
+    private Double value;
     @NotNull(message = "Categoria não pode ficar em branco")
     private Category category;
 }
