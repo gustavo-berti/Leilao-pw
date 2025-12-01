@@ -1,5 +1,7 @@
 package com.github.gustavo_berti.back_end.services;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -7,9 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.github.gustavo_berti.back_end.dto.BidDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Bid;
+import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
 import com.github.gustavo_berti.back_end.repositories.BidRepository;
+import com.github.gustavo_berti.back_end.repositories.PersonRepository;
 
 @Service
 public class BidService {
@@ -17,8 +22,26 @@ public class BidService {
     private BidRepository bidRepository;
     @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private AuctionRepository auctionRepository;
+    @Autowired
+    private PersonRepository personRepository;
+
 
     public Bid insert(Bid bid){
+        return bidRepository.save(bid);
+    }
+
+    public Bid insert(BidDTO dto){
+        Bid bid = new Bid();
+        bid.setAmount(dto.getBidValue());
+        bid.setAuction(auctionRepository.findById(dto.getAuctionId())
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("auction.notfound", 
+                    new Object[]{ dto.getAuctionId() }, LocaleContextHolder.getLocale()))));
+        bid.setPerson(personRepository.findByEmail(dto.getUserEmail())
+                .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound", 
+                    new Object[]{ dto.getUserEmail() }, LocaleContextHolder.getLocale()))));
+        bid.setDateHour(new Date());
         return bidRepository.save(bid);
     }
 
