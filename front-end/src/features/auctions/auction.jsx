@@ -49,7 +49,7 @@ const Auction = () => {
                     key={auction.id}
                     title={`${auction.title} - ${auction.status}`}
                     subTitle={`Lance Mínimo: R$ ${auction.minimalBid} - Término: ${calculateTimeRemaining(auction.dateHourEnd)}`}
-                    footer={user ? <Button label="Participar do Leilão" icon="pi pi-gavel" onClick={() => navigate(`/leiloes/${auction.id}`)} /> : <strong>Faça login para participar</strong>}>
+                    footer={<Button label="Detalhes" icon="pi pi-gavel" onClick={() => navigate(`/leiloes/${auction.id}`)} />}>
                     <AuctionCover auctionId={auction.id} />
                     <p>{auction.description}</p>
                 </Card>

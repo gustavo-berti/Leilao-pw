@@ -85,3 +85,9 @@ body {
     color: vars.$tertiary-color;
   }
 }
+
+.column-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}

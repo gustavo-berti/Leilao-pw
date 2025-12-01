@@ -32,15 +32,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Pages.Home />} />
           <Route path="/leiloes" element={<Pages.Auction />} />
+          <Route path="/leiloes/:id" element={<Pages.AuctionDetail />} />
           <Route element={<Layouts.PublicRoute />}>
             <Route path="/registrar" element={<Pages.Register />} />
             <Route path="/recuperar-senha" element={<Pages.RecoverPassword />} />
           </Route>
           <Route element={<Layouts.PrivateRoute />}>
-            <Route path='/perfil' element={<Pages.Perfil/>}/>
+            <Route path='/perfil' element={<Pages.Perfil />} />
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
             <Route path="/leiloes/criar" element={<Pages.CreateAuction />} />
-            <Route path="/leiloes/:id" element={<Pages.AuctionDetail />} />
           </Route>
           <Route element={<Layouts.AdminRoute />}>
             <Route path="/admin" element={<Pages.Admin />} />

@@ -32,7 +32,7 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.findAll(page));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public ResponseEntity<AuctionDetailDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(auctionService.getDetail(id));
     }   

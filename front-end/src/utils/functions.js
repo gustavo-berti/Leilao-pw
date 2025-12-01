@@ -13,3 +13,14 @@ export const calculateTimeRemaining = (endDate) => {
     endDate = `${days > 0 ? days + "d " : ""}${hours > 0 ? hours + "h " : ""}${minutes > 0 ? minutes + "m " : ""}${seconds}s`;
     return endDate;
 }
+
+export const formatDateBR = (date) => {
+    if (!date) return '';
+    return new Date(date).toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}

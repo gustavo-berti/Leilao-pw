@@ -109,12 +109,24 @@ const createAuction = () => {
               {errors.minimalBid && <small className="p-error">{errors.minimalBid}</small>}
             </div>
             <div className="p-field">
+              <InputNumber
+                value={formData.incrementValue}
+                onValueChange={(e) => handleNumberChange('incrementValue', e.value)}
+                placeholder="Valor do Incremento"
+                mode="currency"
+                currency="BRL"
+                locale="pt-br"
+                min={0}
+              />
+              {errors.incrementValue && <small className="p-error">{errors.incrementValue}</small>}
+            </div>
+            <div className="p-field">
               <Calendar
                 name="dateHourEnd"
                 onChange={(e) => handleChange(e)}
                 showTime
                 value={formData.dateHourEnd}
-                placeholder="Data e Hora de Término"
+                placeholder="Término do Leilão"
                 dateFormat="dd/mm/yy"
               />
               {errors.dateHourEnd && <small className="p-error">{errors.dateHourEnd}</small>}

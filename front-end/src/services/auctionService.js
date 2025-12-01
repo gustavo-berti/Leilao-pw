@@ -34,7 +34,7 @@ class AuctionService extends BaseService {
 
     async findById(id) {
         try {
-            const response = await this.api.get(`${this.endPoint}/${id}`);
+            const response = await this.api.get(`${this.endPoint}/detail/${id}`);
             return response.data;
         } catch (error) {
             throw error;
