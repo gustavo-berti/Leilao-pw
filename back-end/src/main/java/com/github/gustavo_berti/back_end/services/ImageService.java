@@ -80,6 +80,12 @@ public class ImageService {
     public void delete(Long id) {
         Image image = findById(id);
         imageRepository.delete(image);
+        try {
+            Path filePath = Paths.get(uploadDir + image.getImageName());
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao deletar arquivo de imagem: " + image.getImageName(), e);
+        }
     }
 
     public Page<Image> findAll(Pageable pageable) {

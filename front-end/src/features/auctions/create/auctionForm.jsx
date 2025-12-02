@@ -12,6 +12,7 @@ import CategoryService from "../../../services/categoryService";
 import AuctionService from "../../../services/auctionService";
 import ImageService from "../../../services/imageService";
 import './auctionForm.scss';
+import AuctionCover from "../AuctionCover";
 
 const AuctionForm = () => {
   const { id } = useParams();
@@ -215,7 +216,15 @@ const AuctionForm = () => {
             />
             {errors.images && <small className="p-error">{errors.images}</small>}
           </div>
-          <div className="">
+          {isEditMode && (
+            <div className="row">
+              <AuctionCover
+                auctionId={id}
+                isEditable={true}
+              />
+            </div>
+          )}
+          <div className="button-group">
             <Button className="p-button-success"
               onClick={() => handleSubmit()}
               disabled={isLoading}

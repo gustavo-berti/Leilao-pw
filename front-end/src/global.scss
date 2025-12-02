@@ -91,3 +91,9 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
 }
+
+.button-group {
+  .p-button {
+    margin: 0 5px;
+  }
+}
