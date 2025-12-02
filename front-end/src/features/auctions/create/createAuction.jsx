@@ -16,7 +16,7 @@ import './createAuction.scss';
 const createAuction = () => {
   const categoryService = new CategoryService();
   const auctionService = new AuctionService();
-  const imageService = new ImageService();  
+  const imageService = new ImageService();
   const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [isLoading, setIsLoading] = useState(false);
@@ -68,14 +68,11 @@ const createAuction = () => {
       navigate('/leiloes');
     } catch (error) {
       const errorObj = {};
-      console.log(error);
       error.response.data.details.forEach(detail => {
         const [field, message] = detail.split(': ');
         errorObj[field] = message;
       });
       setErrors(errorObj)
-      console.error('Erro ao criar leilão:', error);
-      console.log(errors);
     } finally {
       setIsLoading(false);
     }

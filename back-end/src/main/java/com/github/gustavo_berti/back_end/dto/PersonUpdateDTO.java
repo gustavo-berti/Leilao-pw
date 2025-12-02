@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class PersonUpdateDTO {
-    @NotBlank
+    @NotBlank(message = "O nome não pode estar em branco.")
     private String name;
-    @NotBlank
+    @NotBlank(message = "O email não pode estar em branco.")
     private String email;
 }

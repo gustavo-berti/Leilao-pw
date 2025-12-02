@@ -42,6 +42,11 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.findByFilter(page, validOrderBy, validDirection, title, dateHourEnd, categoryId, status));
     }
 
+    @GetMapping("/user/{email}")
+    public ResponseEntity<Page<AuctionListDTO>> findByUserEmail(@PathVariable("email") String email, Pageable page) {
+        return ResponseEntity.ok(auctionService.findByUserEmail(email, page));
+    }
+
     @GetMapping("/detail/{id}")
     public ResponseEntity<AuctionDetailDTO> findById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(auctionService.getDetail(id));

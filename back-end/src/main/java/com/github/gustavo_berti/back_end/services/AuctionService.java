@@ -151,4 +151,18 @@ public class AuctionService {
                     return dto;
                 });
     }
+
+    public Page<AuctionListDTO> findByUserEmail(String email, Pageable page) {
+        return auctionRepository.findByPersonEmail(email, page).map(auction -> {
+            AuctionListDTO dto = new AuctionListDTO();
+            dto.setId(auction.getId());
+            dto.setTitle(auction.getTitle());
+            dto.setDescription(auction.getDescription());
+            dto.setDateHourEnd(auction.getDateHourEnd());
+            dto.setStatus(auction.getStatus());
+            dto.setValue(bidService.fetchValue(auction.getId()));
+            dto.setCategory(auction.getCategory());
+            return dto;
+        });
+    }
 }

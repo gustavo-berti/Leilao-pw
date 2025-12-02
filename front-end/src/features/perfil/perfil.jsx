@@ -5,8 +5,9 @@ import { InputText } from 'primereact/inputtext';
 import LongContainer from '../../components/longContainer/longContainer.jsx';
 import './perfil.scss';
 import PersonService from '../../services/personService.js';
+import PersonalAuctions from './PersonalAuctions.jsx';
 
-const Perfil = () => {  
+const Perfil = () => {
     const avatarInputRef = useRef(null);
     const [user, setUser] = useState(() => {
         const storedUser = localStorage.getItem('user');
@@ -44,11 +45,31 @@ const Perfil = () => {
         setUserData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
-        personService.updateByEmail(userData);
-        const updatedUser = { ...user, ...userData };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
+    const handleSave = async () => {
+        try {
+            setIsLoading(true);
+            await personService.updateByEmail(userData);
+            const updatedUser = { ...user, ...userData };
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+            setIsEditing(false);
+        } catch (error) {
+            const errorObj = {};
+            error.response.data.details.forEach(detail => {
+                const [field, message] = detail.split(': ');
+                errorObj[field] = message;
+            });
+            setErrors(errorObj)
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
         setIsEditing(false);
+        setUserData({
+            name: user.name,
+            email: user.email
+        });
     };
 
     return (
@@ -77,18 +98,18 @@ const Perfil = () => {
                             {isEditing ? (
                                 <>
                                     <div>
-                                        <div>
-                                            <strong>Nome:</strong> 
-                                            <InputText id="name" name="name" value={userData.name} onChange={handleInputChange}  />
+                                        <div className='p-field'>
+                                            <InputText placeholder="Nome" id="name" name="name" value={userData.name} onChange={handleInputChange} />
+                                            {errors.name && <small className="p-error">{errors.name}</small>}
                                         </div>
-                                        <div>
-                                            <strong>Email:</strong>
-                                            <InputText id="email" name="email" value={userData.email} onChange={handleInputChange} />
+                                        <div className='p-field'>
+                                            <InputText placeholder="Email" id="email" name="email" value={userData.email} onChange={handleInputChange} />
+                                            {errors.email && <small className="p-error">{errors.email}</small>}
                                         </div>
                                     </div>
                                     <div>
-                                        <Button label="Salvar" icon="pi pi-check" onClick={handleSave} className='p-button-success'/>
-                                        <Button label="Cancelar" icon="pi pi-times" onClick={() => setIsEditing(false)} className="p-button-danger" />
+                                        <Button label="Salvar" icon="pi pi-check" onClick={handleSave} className='p-button-success' loading={isLoading} disabled={isLoading} />
+                                        <Button label="Cancelar" icon="pi pi-times" onClick={handleCancel} className="p-button-danger" loading={isLoading} disabled={isLoading} />
                                     </div>
                                 </>
                             ) : (
@@ -101,6 +122,9 @@ const Perfil = () => {
                         </div>
                     </div>
                 }
+            </LongContainer>
+            <LongContainer>
+                <PersonalAuctions email={user.email} />
             </LongContainer>
         </>
     );

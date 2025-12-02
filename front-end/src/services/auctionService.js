@@ -38,6 +38,19 @@ class AuctionService extends BaseService {
             throw error;
         }
     }
+
+    async getAuctionsByUserEmail(email, page = 0, size = 10) {
+        try {
+            const response = await this.api.get(`${this.endPoint}/user/${email}`, {
+                params: {
+                    page, size
+                }
+            });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default AuctionService;
