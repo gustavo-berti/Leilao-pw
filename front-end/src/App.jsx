@@ -45,6 +45,8 @@ function App() {
           <Route element={<Layouts.AdminRoute />}>
             <Route path="/admin" element={<Pages.Admin />} />
           </Route>
+          <Route path="/404" element={<Pages.NotFound />} />
+          <Route path="*" element={<Pages.NotFound />} />
         </Routes>
       </BrowserRouter>
     </>

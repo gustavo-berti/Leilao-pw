@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "primereact/button";
 import { calculateTimeRemaining, formatDateBR } from "../../../utils/functions";
 import LongContainer from "../../../components/longContainer/longContainer";
@@ -11,6 +11,7 @@ import BidService from "../../../services/bidService";
 const auctionDetail = () => {
     const auctionService = new AuctionService();
     const bidService = new BidService();
+    const navigate = useNavigate();
     const { id } = useParams();
     const [auction, setAuction] = useState([]);
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
@@ -41,10 +42,19 @@ const auctionDetail = () => {
     }, [id])
 
     const fecthAuction = async () => {
-        const data = await auctionService.findById(id);
-        setAuction(data);
-        const currentValue = await bidService.fetchValue(id);
-        setBidValue(currentValue || 0);
+        try {
+            const data = await auctionService.findById(id);
+            setAuction(data);
+            const currentValue = await bidService.fetchValue(id);
+            setBidValue(currentValue || 0);
+        } catch (error) {
+            setError('Erro ao carregar detalhes do leilão.');
+            if (error.response && error.response.status === 404) {
+                setTimeout(() => {
+                    navigate('/404', { replace: true });
+                }, 2000);
+            }
+        }
     }
 
     const handleNewBid = (bid) => {
@@ -85,7 +95,7 @@ const auctionDetail = () => {
                         <div>
                             {user ? <Button label="Dar Lance" icon="pi pi-gavel" onClick={placeBid} /> : <p>Faça login para dar um lance!</p>}
                         </div>
-                            {error && <small className="p-error">{error}</small>}
+                        {error && <small className="p-error">{error}</small>}
                     </div>
                 </div>
             </LongContainer>
