@@ -21,6 +21,12 @@ class WebSocketService {
         this.stompClient.onConnect = (frame) => {
             console.log('Connected: ', frame);
             if (onConnected) onConnected();
+            this.stompClient.subscribe('/user/queue/errors', (message) => {
+                if (this.errorCallback) {
+                    console.log("Erro recebido:", message.body);
+                    this.errorCallback(message.body);
+                }
+            });
         };
 
         this.stompClient.onStompError = (frame) => {
@@ -42,6 +48,10 @@ class WebSocketService {
             );
             this.subscriptions[auctionId] = subscription;
         }
+    }
+
+    setErrorCallback(callback) {
+        this.errorCallback = callback;
     }
 
     unsubscribeFromAuction(auctionId) {

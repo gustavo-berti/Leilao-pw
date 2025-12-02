@@ -42,9 +42,16 @@ const Auction = () => {
     }, [filter]);
 
     const fetchAuctions = async (page, size) => {
-        const data = await auctionService.getAll(page, size, filter.title, filter.dateHourEnd, filter.categoryId, filter.status, filter.orderBy, filter.direction);
-        setTotalElements(data.totalElements);
-        setAuctions(data.content);
+        try {
+            setLoading(true);
+            const data = await auctionService.getAll(page, size, filter.title, filter.dateHourEnd, filter.categoryId, filter.status, filter.orderBy, filter.direction);
+            setTotalElements(data.totalElements);
+            setAuctions(data.content);
+        } catch (error) {
+            console.error("Erro ao buscar leilões:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const onPageChange = (event) => {
@@ -74,7 +81,7 @@ const Auction = () => {
                 <h2>Leilões Disponíveis</h2>
                 <div>
                     <Button label="Atualizar Leilões" icon="pi pi-refresh" onClick={() => fetchAuctions(first / rows, rows)} />
-                    <Button label="Filtrar Leilões" icon="pi pi-filter" className="p-button-info" onClick={(e)=>filterPanel.current.toggle(e)} />
+                    <Button label="Filtrar Leilões" icon="pi pi-filter" className="p-button-info" onClick={(e) => filterPanel.current.toggle(e)} />
                     {user ?
                         <Button label="Criar Novo Leilão" icon="pi pi-plus" className="p-button-success" onClick={() => navigate('/leiloes/criar')} /> :
                         <Button label="Logue para criar leilão" icon="pi pi-sign-in" className="p-button-danger" />}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Button } from "primereact/button";
-import { InputNumber } from "primereact/inputnumber";
 import { calculateTimeRemaining, formatDateBR } from "../../../utils/functions";
 import LongContainer from "../../../components/longContainer/longContainer";
 import AuctionService from "../../../services/auctionService";
@@ -17,6 +16,7 @@ const auctionDetail = () => {
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [currentTime, setCurrentTime] = useState(new Date());
     const [bidValue, setBidValue] = useState(0);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         fecthAuction();
@@ -27,9 +27,17 @@ const auctionDetail = () => {
 
         websocketService.connect(() => {
             websocketService.subscribeToAuction(id, handleNewBid);
+            websocketService.setErrorCallback((errorMessage) => {
+                setError(errorMessage);
+                setTimeout(() => setError(null), 5000);
+            });
         });
 
-        return () => clearInterval(timer);
+        return () => {
+            clearInterval(timer);
+            websocketService.unsubscribeFromAuction(id);
+            websocketService.disconnect();
+        };
     }, [id])
 
     const fecthAuction = async () => {
@@ -44,12 +52,17 @@ const auctionDetail = () => {
     }
 
     const placeBid = () => {
-        const bid = {
-            auctionId: auction.id,
-            bidValue: bidValue ? auction.incrementValue : auction.minimalBid,
-            userEmail: user.email
-        };
-        websocketService.sendBid(bid);
+        try {
+            setError(null);
+            const bid = {
+                auctionId: auction.id,
+                bidValue: bidValue ? auction.incrementValue : auction.minimalBid,
+                userEmail: user.email
+            };
+            websocketService.sendBid(bid);
+        } catch (error) {
+            setError(error);
+        }
     }
 
     return (
@@ -69,7 +82,10 @@ const auctionDetail = () => {
                         <p><strong>Data de Término:</strong> {calculateTimeRemaining(auction.dateHourEnd)}</p>
                         <p><strong>Email do Criador:</strong> {auction.userEmail}</p>
                         <p><strong>Status:</strong> {auction.status}</p>
-                        {user ? <Button label="Dar Lance" icon="pi pi-gavel" onClick={placeBid} /> : <p>Faça login para dar um lance!</p>}
+                        <div>
+                            {user ? <Button label="Dar Lance" icon="pi pi-gavel" onClick={placeBid} /> : <p>Faça login para dar um lance!</p>}
+                        </div>
+                            {error && <small className="p-error">{error}</small>}
                     </div>
                 </div>
             </LongContainer>

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.BidDTO;
+import com.github.gustavo_berti.back_end.exception.BidValidationException;
 import com.github.gustavo_berti.back_end.models.Bid;
 import com.github.gustavo_berti.back_end.services.BidService;
 
@@ -32,9 +34,23 @@ public class BidController {
     private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/bid")
-    public void placeBid(@Payload BidDTO bid) {
-        bidService.insert(bid);
-        messagingTemplate.convertAndSend("/topic/auction/" + bid.getAuctionId(), bid);
+    public void placeBid(@Payload BidDTO bid, SimpMessageHeaderAccessor headerAccessor) {
+        try {
+            bidService.insert(bid);
+            messagingTemplate.convertAndSend("/topic/auction/" + bid.getAuctionId(), bid);
+        } catch (BidValidationException e) {
+            String username = headerAccessor.getUser().getName();
+            messagingTemplate.convertAndSendToUser(
+                    username,
+                    "/queue/errors",
+                    e.getMessage());
+        } catch (Exception e) {
+            String username = headerAccessor.getUser().getName();
+            messagingTemplate.convertAndSendToUser(
+                    username,
+                    "/queue/errors",
+                    "Erro ao processar lance: " + e.getMessage());
+        }
     }
 
     @GetMapping

@@ -11,8 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.github.gustavo_berti.back_end.dto.BidDTO;
+import com.github.gustavo_berti.back_end.exception.BidValidationException;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Bid;
+import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
 import com.github.gustavo_berti.back_end.repositories.BidRepository;
 import com.github.gustavo_berti.back_end.repositories.PersonRepository;
@@ -34,6 +36,7 @@ public class BidService {
     }
 
     public Bid insert(BidDTO dto){
+        validateBidPerson(dto);
         Bid bid = new Bid();
         bid.setAmount(dto.getBidValue());
         bid.setAuction(auctionRepository.findById(dto.getAuctionId())
@@ -78,6 +81,17 @@ public class BidService {
             value += bid.getAmount();
         }
         return value;
+    }
+
+    private void validateBidPerson(BidDTO dto) {
+        Person person = personRepository.findByEmail(dto.getUserEmail())
+            .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound", 
+                new Object[]{ dto.getUserEmail() }, LocaleContextHolder.getLocale())));
+        Bid lastBid = bidRepository.findLastBid(dto.getAuctionId());
+        if (lastBid != null && lastBid.getPerson().getId().equals(person.getId())) {
+            throw new BidValidationException(messageSource.getMessage("bid.sameperson", 
+                new Object[]{ person.getEmail() }, LocaleContextHolder.getLocale()));
+        }
     }
 
 }

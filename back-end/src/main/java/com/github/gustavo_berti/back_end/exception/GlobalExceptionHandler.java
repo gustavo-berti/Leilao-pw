@@ -172,4 +172,15 @@ public class GlobalExceptionHandler {
                                 null);
                 return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
         }
+
+        @ExceptionHandler(BidValidationException.class)
+        public ResponseEntity<ErrorResponse> handleBidValidationException(BidValidationException ex, WebRequest request) {
+                ErrorResponse errorResponse = new ErrorResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                ex.getMessage(),
+                                request.getDescription(false),
+                                null);
+                return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        }
 }

@@ -29,6 +29,7 @@ const FilterPopup = ({ filter, setFilter, fetchAuctions }) => {
         <>
             <div>
                 <div className="p-field select-place">
+                    Título:
                     <InputText
                         name="title"
                         value={filter.title}
@@ -37,6 +38,7 @@ const FilterPopup = ({ filter, setFilter, fetchAuctions }) => {
                     />
                 </div>
                 <div className="p-field">
+                    Até:
                     <Calendar
                         name="dateHourEnd"
                         onChange={(e) => handleChange(e)}
@@ -47,6 +49,7 @@ const FilterPopup = ({ filter, setFilter, fetchAuctions }) => {
                     />
                 </div>
                 <div className="p-field">
+                    Categoria:
                     <Dropdown
                         name="categoryId"
                         placeholder="Categoria"
@@ -58,6 +61,7 @@ const FilterPopup = ({ filter, setFilter, fetchAuctions }) => {
                     />
                 </div>
                 <div className="p-field">
+                    Status:
                     <Dropdown
                         name="status"
                         placeholder="Status"
@@ -74,11 +78,12 @@ const FilterPopup = ({ filter, setFilter, fetchAuctions }) => {
                     />
                 </div>
                 <div className="p-field">
+                    Ordenar Por:
                     <Dropdown
                         name="orderBy"
                         placeholder="Ordenar Por"
                         options={[
-                            { label: 'ID', value: 'id' },
+                            { label: 'Nenhum', value: 'id' },
                             { label: 'Título', value: 'title' },
                             { label: 'Data de Término', value: 'dateHourEnd' },
                             { label: 'Valor Atual', value: 'value' }
