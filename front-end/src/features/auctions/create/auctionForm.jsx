@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { InputTextarea } from 'primereact/inputtextarea';
@@ -11,13 +11,15 @@ import LongContainer from "../../../components/longContainer/longContainer"
 import CategoryService from "../../../services/categoryService";
 import AuctionService from "../../../services/auctionService";
 import ImageService from "../../../services/imageService";
-import './createAuction.scss';
+import './auctionForm.scss';
 
-const createAuction = () => {
+const AuctionForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const isEditMode = !!id;
   const categoryService = new CategoryService();
   const auctionService = new AuctionService();
   const imageService = new ImageService();
-  const navigate = useNavigate();
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -26,7 +28,7 @@ const createAuction = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    longDescription: '',
+    detailedDescription: '',
     minimalBid: '',
     dateHourEnd: '',
     category: null,
@@ -34,11 +36,30 @@ const createAuction = () => {
 
   useEffect(() => {
     fetchCategories();
+    if (isEditMode) {
+      fetchAuctionData(id);
+    }
   }, []);
 
   const fetchCategories = async () => {
     const data = await categoryService.getAll();
     setCategories(data.content);
+  }
+
+  const fetchAuctionData = async (auctionId) => {
+    setIsLoading(true);
+    try {
+      const data = await auctionService.findById(auctionId);
+      setFormData({ ...data, dateHourEnd: new Date(data.dateHourEnd), category: data.category });
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        setTimeout(() => {
+          navigate('/404', { replace: true });
+        }, 2000);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   const handleChange = (e) => {
@@ -54,17 +75,26 @@ const createAuction = () => {
     setImages(e.files);
   };
 
-  const saveAuction = async () => {
+  const handleSubmit = async () => {
     setIsLoading(true);
+    setErrors({});
     try {
-      const response = await auctionService.insert(formData, user.email);
+      let response;
+      if (isEditMode) {
+        formData.id = id;
+        response = await auctionService.update(formData);
+      } else {
+        response = await auctionService.insert(formData, user.email);
+      }
       if (images.length > 0) {
         const formDataImages = new FormData();
         images.forEach((image) => {
           formDataImages.append('images', image);
         });
-        await imageService.uploadImages(response.id, formDataImages);
+        const auctionIdTarget = isEditMode ? id : response.id;
+        await imageService.uploadImages(auctionIdTarget, formDataImages);
       }
+
       navigate('/leiloes');
     } catch (error) {
       const errorObj = {};
@@ -81,7 +111,7 @@ const createAuction = () => {
   return (
     <>
       <LongContainer>
-        <h2>Criar Leilão</h2>
+        <h2>{isEditMode ? 'Editar Leilão' : 'Criar Leilão'}</h2>
         <div className="form">
           <div className="row">
             <div className="p-field select-place">
@@ -102,6 +132,7 @@ const createAuction = () => {
                 currency="BRL"
                 locale="pt-br"
                 min={0}
+                disabled={isEditMode}
               />
               {errors.minimalBid && <small className="p-error">{errors.minimalBid}</small>}
             </div>
@@ -177,23 +208,30 @@ const createAuction = () => {
               emptyTemplate={
                 <div className="drag-drop">
                   <i className="pi pi-image"></i>
+                  {isEditMode && <p>Adicionar novas imagens (imagens antigas serão mantidas):</p>}
                   <span> Arraste e solte as imagens aqui </span>
                 </div>
               }
             />
             {errors.images && <small className="p-error">{errors.images}</small>}
           </div>
-          <Button className="p-button-success"
-            onClick={() => saveAuction()}
-            disabled={isLoading}
-            loading={isLoading}
-          >
-            Criar Leilão
-          </Button >
+          <div className="">
+            <Button className="p-button-success"
+              onClick={() => handleSubmit()}
+              disabled={isLoading}
+              loading={isLoading}
+              label={isEditMode ? "Salvar Alterações" : "Criar Leilão"}
+            />
+            <Button className="p-button-danger"
+              onClick={() => navigate(-1)}
+              disabled={isLoading}
+              label="Cancelar"
+            />
+          </div>
         </div>
       </LongContainer>
     </>
   );
 }
 
-export default createAuction;
+export default AuctionForm;

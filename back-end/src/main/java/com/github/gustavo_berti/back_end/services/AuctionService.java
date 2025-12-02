@@ -51,15 +51,19 @@ public class AuctionService {
         return auctionRepository.save(newAuction);
     }
 
-    public Auction update(AuctionCreateDTO auction) {
+    public AuctionDetailDTO update(AuctionCreateDTO auction) {
         validateAuctionDates(auction);
         Auction existingAuction = findById(auction.getId());
         validateBidValues(auction, existingAuction);
         validateUser(auction, existingAuction);
         existingAuction.setTitle(auction.getTitle());
         existingAuction.setDescription(auction.getDescription());
-        existingAuction.setStatus(auction.getStatus());
-        return auctionRepository.save(existingAuction);
+        existingAuction.setCategory(auction.getCategory());
+        existingAuction.setDateHourEnd(auction.getDateHourEnd());
+        existingAuction.setDetailedDescription(auction.getDetailedDescription());
+        existingAuction.setIncrementValue(auction.getIncrementValue());
+        Auction updated = auctionRepository.save(existingAuction);
+        return getDetail(updated.getId());
     }
 
     public void delete(Long id) {
@@ -124,9 +128,6 @@ public class AuctionService {
     private void validateBidValues(AuctionCreateDTO auction, Auction existingAuction) {
         if (auction.getIncrementValue() <= 0) {
             throw new IllegalArgumentException("Valor do incremento deve ser maior que zero.");
-        }
-        if (auction.getIncrementValue() <= existingAuction.getIncrementValue()) {
-            throw new IllegalArgumentException("Valor do incremento deve ser maior que o valor atual.");
         }
     }
 

@@ -40,7 +40,8 @@ function App() {
           <Route element={<Layouts.PrivateRoute />}>
             <Route path='/perfil' element={<Pages.Perfil />} />
             <Route path="/alterar-senha" element={<Pages.ChangePassword />} />
-            <Route path="/leiloes/criar" element={<Pages.CreateAuction />} />
+            <Route path="/leiloes/criar" element={<Pages.AuctionForm />} />
+            <Route path="/leiloes/editar/:id" element={<Pages.AuctionForm />} />
           </Route>
           <Route element={<Layouts.AdminRoute />}>
             <Route path="/admin" element={<Pages.Admin />} />

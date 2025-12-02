@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from 'primereact/button';
+import { useNavigate } from 'react-router-dom';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import AuctionService from '../../services/auctionService.js';
-import { Button } from 'primereact/button';
 
 const PersonalAuctions = ({ email }) => {
+    const navigate = useNavigate();
     const auctionService = new AuctionService();
     const [first, setFirst] = useState(0);
     const [rows, setRows] = useState(5);
@@ -45,7 +47,7 @@ const PersonalAuctions = ({ email }) => {
                         }}>
                         <Column field="title" header="Título" />
                         <Column field="status" header="Status" />
-                        <Column header="Editar" body={() => <Button label="Editar"  />} />
+                        <Column header="Editar" body={(rowData) => <Button label="Editar" onClick={() => navigate(`/leiloes/editar/${rowData.id}`)} />} />
                     </DataTable>
                 )}
             </div>

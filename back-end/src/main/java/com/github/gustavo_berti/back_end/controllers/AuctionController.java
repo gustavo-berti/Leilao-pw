@@ -57,8 +57,8 @@ public class AuctionController {
         return ResponseEntity.ok(auctionService.insert(auction));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<Auction> update(@Valid @RequestBody AuctionCreateDTO auction) {
+    @PutMapping
+    public ResponseEntity<AuctionDetailDTO> update(@Valid @RequestBody AuctionCreateDTO auction) {
         return ResponseEntity.ok(auctionService.update(auction));
     }
 
