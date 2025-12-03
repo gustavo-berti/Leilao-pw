@@ -50,6 +50,7 @@ const CreateFeedback = ({ visible, onHide, targetPersonEmail, userEmail, onFeedb
                 header="Avaliar Vendedor"
                 visible={visible}
                 style={{ width: '50vw' }}
+                breakpoints={{ '960px': '75vw', '641px': '95vw' }}
                 contentStyle={{ padding: '1rem' }}
                 headerStyle={{ padding: '1rem' }}
                 footer={footer}

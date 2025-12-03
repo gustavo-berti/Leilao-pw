@@ -6,14 +6,13 @@ import LongContainer from '../../components/longContainer/longContainer.jsx';
 import './perfil.scss';
 import PersonService from '../../services/personService.js';
 import PersonalAuctions from './PersonalAuctions.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Perfil = () => {
     const avatarInputRef = useRef(null);
-    const [user, setUser] = useState(() => {
-        const storedUser = localStorage.getItem('user');
-        return storedUser ? JSON.parse(storedUser) : {};
-    });
+    const navigate = new useNavigate();
     const personService = new PersonService();
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
     const [isEditing, setIsEditing] = useState(false);
     const [avatar, setAvatar] = useState(null);
     const [errors, setErrors] = useState({});
@@ -116,7 +115,10 @@ const Perfil = () => {
                                 <>
                                     <p><strong>Nome:</strong> {userData.name}</p>
                                     <p><strong>Email:</strong> {userData.email}</p>
-                                    <Button onClick={() => setIsEditing(true)}>Editar</Button>
+                                    <div className="button-group">
+                                        <Button onClick={() => setIsEditing(true)}>Editar</Button>
+                                        <Button onClick={() => navigate('/alterar-senha')}>Alterar Senha</Button>
+                                    </div>
                                 </>
                             )}
                         </div>

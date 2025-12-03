@@ -1,20 +1,20 @@
+@use '../../vars.scss' as vars;
+
 .notfound-title {
     font-size: 8rem;
     font-weight: bold;
-    color: var(--primary-color);
+    color: vars.$primary-color;
     margin: 0;
     line-height: 1;
 }
 
 .notfound-subtitle {
     font-size: 2rem;
-    color: var(--text-color);
     margin: 1rem 0;
 }
 
 .notfound-message {
     font-size: 1.2rem;
-    color: var(--text-color-secondary);
     margin: 2rem 0;
 }
 
@@ -25,16 +25,20 @@
     margin-top: 2rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: vars.$breakpoint-mobile) {
     .notfound-title {
         font-size: 5rem;
     }
-    
+
     .notfound-subtitle {
         font-size: 1.5rem;
     }
-    
+
     .notfound-buttons {
         flex-direction: column;
+
+        .p-button {
+            width: 100%;
+        }
     }
 }

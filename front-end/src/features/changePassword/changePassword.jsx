@@ -5,6 +5,7 @@ import { Button } from 'primereact/button';
 import { changePasswordSchema } from '../../schemas/changePasswordSchema';
 import { useNavigate } from 'react-router-dom';
 import PersonService from '../../services/personService';
+import './changePassword.scss';
 
 const ChangePassword = () => {
     const personService = new PersonService();
@@ -111,7 +112,7 @@ const ChangePassword = () => {
                 )}
                 <div className="p-field" id='buttons'>
                     <Button label="Alterar Senha" type='submit' className="p-button-success" loading={loading} disabled={loading} />
-                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => navigate('/')} disabled={loading} />
+                    <Button label="Cancelar" type='button' className="p-button-secondary" onClick={() => navigate(-1)} disabled={loading} />
                 </div>
             </form>
         </ShortContainer>

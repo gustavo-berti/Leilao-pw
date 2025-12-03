@@ -1,0 +1,40 @@
+@use '../../vars.scss' as vars;
+
+.login-container {
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  min-height: 100vh;
+  width: 40vw;
+  background-color: gray;
+  margin: 0 auto;
+
+  @media (max-width: vars.$breakpoint-mobile) {
+    width: 100vw;
+    padding: 1em;
+    height: auto;
+  }
+}
+
+.login-item {
+  margin: 0.3em;
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-logo {
+  align-self: center;
+  height: 25em;
+  width: auto;
+  margin: 0;
+  max-width: 100%;
+  object-fit: contain;
+
+  @media (max-width: vars.$breakpoint-mobile) {
+    height: 15em;
+    margin-bottom: 2em;
+  }
+}

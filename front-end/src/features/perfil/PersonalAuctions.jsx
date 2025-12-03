@@ -20,7 +20,6 @@ const PersonalAuctions = ({ email }) => {
         try {
             setLoading(true);
             const data = await auctionService.getAuctionsByUserEmail(email, page, size);
-            console.log(data);
             setTotalElements(data.totalElements);
             setAuctions(data.content);
         } catch (err) {

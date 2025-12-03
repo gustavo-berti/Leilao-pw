@@ -35,7 +35,6 @@ const Feedback = ({ auctionID, targetPersonEmail, userEmail }) => {
     };
 
     const feedbackTemplate = (feedback) => {
-        console.log(feedback);
         return (
             <div className="feedback">
                 <div className="space-between">

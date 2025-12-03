@@ -10,7 +10,7 @@
 
 body {
   background-color: vars.$secondary-color;
-  padding-top: 60px;
+  padding-top: 100px;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -70,7 +70,7 @@ body {
   display: none;
 }
 
-.p-paginator{
+.p-paginator {
   background-color: vars.$secondary-color;
   color: vars.$text-primary-color;
 }
@@ -81,6 +81,7 @@ body {
 .p-paginator-next,
 .p-paginator-page {
   color: vars.$text-primary-color;
+
   &.p-highlight {
     color: vars.$tertiary-color;
   }
@@ -90,11 +91,19 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+
+  @media (max-width: vars.$breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+
   .p-button {
-    margin: 0 5px;
+    margin: 0;
   }
 }
 
@@ -102,8 +111,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.footer{
-    padding: 1rem;
+.footer {
+  padding: 1rem;
 }

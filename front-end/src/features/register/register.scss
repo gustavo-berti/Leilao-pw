@@ -1,0 +1,35 @@
+@use '../../vars.scss' as vars;
+
+.p-field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+
+    .p-button {
+        width: fit-content;
+        padding: 0.2em 0.5em;
+    }
+
+    .p-inputtext {
+        width: 100%;
+        padding: 0.5em;
+    }
+
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        flex-direction: column;
+
+        .p-button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}

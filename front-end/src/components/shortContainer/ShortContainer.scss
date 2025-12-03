@@ -11,4 +11,12 @@
     padding: 1em;
     background-color: vars.$primary-color;
     border: 1px solid darken(vars.$secondary-color, 10%);
+    overflow-y: auto;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        width: 90vw;
+        margin-top: 2em;
+        max-height: none;
+        padding: 0.5em;
+    }
 }

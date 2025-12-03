@@ -1,8 +1,16 @@
+@use '../../vars.scss' as vars;
+
 .perfil-info {
     display: grid;
     grid-template-columns: 20% auto;
     gap: 10px;
     margin: 20px auto;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
 
     .avatar {
         display: flex;
@@ -22,6 +30,11 @@
         flex-direction: column;
         justify-content: center;
 
+        @media (max-width: vars.$breakpoint-mobile) {
+            width: 100%;
+            align-items: center;
+        }
+
         p {
             margin: 5px 0;
             font-size: 1.2rem;
@@ -31,6 +44,11 @@
             width: fit-content;
             align-self: flex-start;
             margin: 0 5px;
+
+            @media (max-width: vars.$breakpoint-mobile) {
+                align-self: center;
+                margin-top: 10px;
+            }
         }
 
         .p-inputtext {

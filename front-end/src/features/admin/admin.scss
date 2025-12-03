@@ -5,6 +5,11 @@
     flex-wrap: nowrap;
     flex-direction: row;
     gap: 5px;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 .content {

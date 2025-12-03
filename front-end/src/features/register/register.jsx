@@ -5,7 +5,7 @@ import { personSchema } from '../../schemas/personSchema';
 import { ShortContainer } from '../../components';
 import { useNavigate } from 'react-router-dom';
 import PersonService from '../../services/personService';
-import './index.scss';
+import './register.scss';
 
 const Register = () => {
     const personService = new PersonService();
@@ -68,7 +68,6 @@ const Register = () => {
             setErrors(formattedErrors);
         }
         try {
-            console.log(formData)
             await personService.create(formData);
             navigate('/');
         } catch (error) {

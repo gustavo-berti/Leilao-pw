@@ -24,7 +24,6 @@ const CategoriesTable = () => {
         try {
             const data = await categoryService.getAll();
             setCategories(data.content);
-            console.log(data);
         } catch (error) {
             console.error("Error fetching categories:", error);
         } finally {

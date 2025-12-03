@@ -76,6 +76,7 @@ const NewCategoryModal = ({ visible, onHide, onCategoryAdded }) => {
             header="Nova Categoria"
             visible={visible}
             style={{ width: '50vw'}}
+            breakpoints={{ '960px': '75vw', '641px': '95vw' }}
             contentStyle={{padding:'1rem'}}
             headerStyle={{padding:'1rem'}}
             footer={footer}

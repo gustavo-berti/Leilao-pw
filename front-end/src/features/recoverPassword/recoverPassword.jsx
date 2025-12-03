@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { changePasswordSchema } from '../../schemas/changePasswordSchema';
 import tokenService from '../../services/tokenService';
 import recoverPasswordService from '../../services/recoverPasswordService';   
-import './index.scss';
+import './recoverPassword.scss';
 
 const RecoverPassword = () => {
     const navigate = useNavigate();
@@ -38,7 +38,6 @@ const RecoverPassword = () => {
         e.preventDefault();
         try {
             const response = await tokenService.generate(email);
-            console.log(response);
             if (response.valid) {
 
             }
@@ -52,7 +51,6 @@ const RecoverPassword = () => {
         e.preventDefault();
         try {
             await changePasswordSchema.validate({ password, confirmPassword }, {abortEarly: false});
-            console.log('Senha alterada com sucesso!');
         } catch (validationErrors) {
             const formattedErrors = {};
             if (validationErrors.inner && validationErrors.inner.length > 0) {
@@ -68,7 +66,6 @@ const RecoverPassword = () => {
         }
         try {
             await recoverPasswordService.recoverPassword(email, password, token);
-            console.log('Senha alterada com sucesso!');
         } catch (error) {
             console.error('Erro ao alterar senha:', error);
         }

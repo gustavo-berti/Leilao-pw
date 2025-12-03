@@ -74,7 +74,6 @@ const UsersTable = () => {
     const onRowEditComplete = async (e) => {
         let _users = [...users];
         _users[e.index] = e.newData;
-        console.log(e.newData);
         setLoading(true);
         try {
             await personService.update(e.newData);

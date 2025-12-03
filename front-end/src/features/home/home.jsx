@@ -1,5 +1,5 @@
 import * as Components from '../../components/index.jsx';
-import './index.scss';
+import './home.scss';
 
 const Home = () => {
     return (

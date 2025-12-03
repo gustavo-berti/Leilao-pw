@@ -5,8 +5,24 @@
     align-items: center;
     margin: 10px;
     justify-content: space-between;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        flex-direction: column; 
+        align-items: stretch;
+        gap: 15px;
+    }
 }
 
 #search {
     justify-self: flex-end;
+
+    @media (max-width: vars.$breakpoint-mobile) {
+        width: 100%;
+        display: flex;
+        
+        .p-inputtext {
+            width: 100%; 
+            margin-right: 0;
+        }
+    }
 }
