@@ -7,6 +7,8 @@ import AuctionService from "../../../services/auctionService";
 import AuctionCover from "../AuctionCover";
 import websocketService from "../../../services/websocketService";
 import BidService from "../../../services/bidService";
+import Feedback from "./Feedback";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 const auctionDetail = () => {
     const auctionService = new AuctionService();
@@ -98,6 +100,13 @@ const auctionDetail = () => {
                         {error && <small className="p-error">{error}</small>}
                     </div>
                 </div>
+            </LongContainer>
+            <LongContainer>
+                {auction.userEmail ? (
+                    <Feedback auctionID={id} targetPersonEmail={auction.userEmail} userEmail={user?.email} /> 
+                ) : (
+                    <ProgressSpinner />
+                )}
             </LongContainer>
         </>
     )

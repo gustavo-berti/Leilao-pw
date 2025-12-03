@@ -14,4 +14,7 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     
     @Query("SELECT b FROM Bid b WHERE b.auction.id = :auctionId ORDER BY b.dateHour DESC LIMIT 1")
     public Bid findLastBid(Long auctionId);
+
+    @Query("SELECT b FROM Bid b WHERE b.auction.id = :auctionId AND b.person.id = :id")
+    public List<Bid> findByAuctionIDAndPersonId(Long auctionId, Long id);
 }

@@ -83,6 +83,14 @@ public class BidService {
         return value;
     }
 
+    public Boolean personHasBidded(Long auctionId, String userEmail) {
+        Person person = personRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound", 
+                new Object[]{ userEmail }, LocaleContextHolder.getLocale())));
+        List<Bid> bids = bidRepository.findByAuctionIDAndPersonId(auctionId, person.getId());
+        return !bids.isEmpty();
+    }
+
     private void validateBidPerson(BidDTO dto) {
         Person person = personRepository.findByEmail(dto.getUserEmail())
             .orElseThrow(() -> new NotFoundException(messageSource.getMessage("person.notfound", 

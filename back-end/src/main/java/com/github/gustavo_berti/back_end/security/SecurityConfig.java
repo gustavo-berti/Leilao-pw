@@ -58,6 +58,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/images/file/**").permitAll()
                         .requestMatchers("/api/categories/list").permitAll()
                         .requestMatchers("/api/bids/value/**").permitAll()
+                        .requestMatchers("/api/bids/personHasBidded").permitAll()
+                        .requestMatchers("/api/feedbacks/byTargetPerson/**").permitAll()
                         .requestMatchers("/api/people/change-password").hasAnyRole("BUYER", "SELLER", "ADMIN")
                         .requestMatchers("/api/people/validate-password").hasAnyRole("BUYER", "SELLER", "ADMIN")
                         .requestMatchers("/api/people/update").hasAnyRole("BUYER", "SELLER", "ADMIN")

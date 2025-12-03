@@ -1,5 +1,7 @@
 package com.github.gustavo_berti.back_end.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.FeedbackCreateDTO;
+import com.github.gustavo_berti.back_end.dto.FeedbackListDTO;
 import com.github.gustavo_berti.back_end.models.Feedback;
 import com.github.gustavo_berti.back_end.services.FeedbackService;
 
@@ -27,8 +31,13 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackService.findAll(pageable));
     }
 
+    @GetMapping("/byTargetPerson/{targetPersonEmail}")
+    public ResponseEntity<List<FeedbackListDTO>> findByTargetPersonEmail(@PathVariable("targetPersonEmail") String targetPersonEmail) {
+        return ResponseEntity.ok(feedbackService.findByTargetPersonEmail(targetPersonEmail));
+    }
+
     @PostMapping
-    public ResponseEntity<Feedback> insert(@RequestBody Feedback feedback) {
+    public ResponseEntity<Feedback> insert(@RequestBody FeedbackCreateDTO feedback) {
         return ResponseEntity.ok(feedbackService.insert(feedback));
     }
 

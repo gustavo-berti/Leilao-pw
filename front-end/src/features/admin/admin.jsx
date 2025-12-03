@@ -8,6 +8,7 @@ import './admin.scss';
 
 const Admin = () => {
     const [activeTab, setActiveTab] = useState('users');
+    
     return (
         <LongContainer>
             <h1>Painel Administrativo</h1>

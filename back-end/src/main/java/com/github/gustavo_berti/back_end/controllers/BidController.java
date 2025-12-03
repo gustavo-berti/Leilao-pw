@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.gustavo_berti.back_end.dto.BidDTO;
@@ -61,6 +62,11 @@ public class BidController {
     @GetMapping("/value/{auctionId}")
     public ResponseEntity<Double> fetchValue(@PathVariable("auctionId") Long auctionId) {
         return ResponseEntity.ok(bidService.fetchValue(auctionId));
+    }
+
+    @GetMapping("/personHasBidded")
+    public ResponseEntity<Boolean> personHasBidded(@RequestParam Long auctionId, @RequestParam String userEmail) {
+        return ResponseEntity.ok(bidService.personHasBidded(auctionId, userEmail));
     }
 
     @PostMapping

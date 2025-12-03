@@ -14,6 +14,18 @@ class BidService extends BaseService {
             return error;
         }
     }
+
+    async personHasBidded(auctionId, userEmail) {
+        try {
+            const response = await this.api.get(`${this.endPoint}/personHasBidded`, {
+                params: { auctionId, userEmail }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Erro ao verificar se a pessoa já deu lance:', error);
+            return error;
+        }
+    }
 }
 
 export default BidService;

@@ -53,7 +53,7 @@ const NewCategoryModal = ({ visible, onHide, onCategoryAdded }) => {
     };
 
     const footer = (
-        <div id="footer">
+        <div className="footer">
             <Button
                 label="Cancelar"
                 icon="pi pi-times"
