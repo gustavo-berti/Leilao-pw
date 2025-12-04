@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.gustavo_berti.back_end.dto.PaymentDTO;
 import com.github.gustavo_berti.back_end.models.Payment;
 import com.github.gustavo_berti.back_end.services.PaymentService;
 
@@ -30,7 +31,7 @@ public class PaymentController {
     }
 
     @PostMapping
-    public ResponseEntity<Payment> insert(@Valid @RequestBody Payment payment) {
+    public ResponseEntity<Payment> pay(@Valid @RequestBody PaymentDTO payment) {
         return ResponseEntity.ok(paymentService.insert(payment));
     }
 
