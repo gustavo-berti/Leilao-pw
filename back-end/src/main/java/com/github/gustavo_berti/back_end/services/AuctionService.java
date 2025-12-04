@@ -1,6 +1,7 @@
 package com.github.gustavo_berti.back_end.services;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -10,16 +11,21 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import com.github.gustavo_berti.back_end.dto.AuctionCreateDTO;
 import com.github.gustavo_berti.back_end.dto.AuctionDetailDTO;
 import com.github.gustavo_berti.back_end.dto.AuctionListDTO;
 import com.github.gustavo_berti.back_end.exception.NotFoundException;
 import com.github.gustavo_berti.back_end.models.Auction;
+import com.github.gustavo_berti.back_end.models.Bid;
 import com.github.gustavo_berti.back_end.models.Person;
 import com.github.gustavo_berti.back_end.models.enums.AuctionStatus;
 import com.github.gustavo_berti.back_end.repositories.AuctionRepository;
+import com.github.gustavo_berti.back_end.repositories.BidRepository;
 import com.github.gustavo_berti.back_end.specifications.AuctionSpecification;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuctionService {
@@ -30,7 +36,11 @@ public class AuctionService {
     @Autowired
     private BidService bidService;
     @Autowired
+    private BidRepository bidRepository;
+    @Autowired
     private MessageSource messageSource;
+    @Autowired
+    private EmailService emailService;
 
     public Auction insert(AuctionCreateDTO auction) {
         validateAuctionDates(auction);
@@ -59,9 +69,14 @@ public class AuctionService {
         existingAuction.setTitle(auction.getTitle());
         existingAuction.setDescription(auction.getDescription());
         existingAuction.setCategory(auction.getCategory());
-        existingAuction.setDateHourEnd(auction.getDateHourEnd());
         existingAuction.setDetailedDescription(auction.getDetailedDescription());
         existingAuction.setIncrementValue(auction.getIncrementValue());
+        existingAuction.setStatus(auction.getStatus());
+        if (auction.getStatus() == AuctionStatus.CANCELED) {
+            existingAuction.setDateHourEnd(new Date());
+        } else {
+            existingAuction.setDateHourEnd(auction.getDateHourEnd());
+        }
         Auction updated = auctionRepository.save(existingAuction);
         return getDetail(updated.getId());
     }
@@ -133,7 +148,8 @@ public class AuctionService {
 
     public Page<AuctionListDTO> findByFilter(Pageable page, String orderBy, String direction, String title,
             Date dateHourEnd, Long categoryId, AuctionStatus status) {
-        Sort sort = Sort.by(Sort.Direction.fromString(direction != null ? direction : "ASC"),orderBy != null ? orderBy : "id");
+        Sort sort = Sort.by(Sort.Direction.fromString(direction != null ? direction : "ASC"),
+                orderBy != null ? orderBy : "id");
         Pageable sortedPageable = PageRequest.of(
                 page.getPageNumber(),
                 page.getPageSize(),
@@ -165,5 +181,29 @@ public class AuctionService {
             dto.setCategory(auction.getCategory());
             return dto;
         });
+    }
+
+    @Transactional
+    public void processExpiredAuctions() {
+        Date now = new Date();
+        List<Auction> expiredAuctions = auctionRepository.findByStatusAndDateHourEndBefore(AuctionStatus.OPEN, now);
+        for (Auction auction : expiredAuctions) {
+            auction.setStatus(AuctionStatus.CLOSED);
+            auctionRepository.save(auction);
+            Bid winningBid = bidRepository.findLastBid(auction.getId());
+            if (winningBid != null) {
+                String link = "http://localhost:5173/pagamento/" + auction.getId();
+                Context context = new Context();
+                context.setVariable("name", winningBid.getPerson().getName());
+                context.setVariable("auctionTitle", auction.getTitle());
+                context.setVariable("value", winningBid.getAmount());
+                context.setVariable("paymentLink", link);
+                emailService.emailTemplate(
+                        winningBid.getPerson().getEmail(),
+                        "Você venceu o leilão: " + auction.getTitle(),
+                        "auctionWinner",
+                        context);
+            }
+        }
     }
 }

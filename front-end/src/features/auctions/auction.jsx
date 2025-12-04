@@ -26,7 +26,7 @@ const Auction = () => {
         title: "",
         dateHourEnd: "",
         categoryId: "",
-        status: "",
+        status: "OPEN",
         orderBy: "id",
         direction: "ASC"
     });
