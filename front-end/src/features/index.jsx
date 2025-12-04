@@ -5,6 +5,7 @@ export { default as ChangePassword } from "./changePassword/changePassword.jsx";
 export { default as Admin } from "./admin/admin.jsx";
 export { default as Perfil } from "./perfil/perfil.jsx"
 export { default as Auction } from "./auctions/auction.jsx"
-export { default as AuctionForm } from "./auctions/create/AuctionForm.jsx"
+export { default as AuctionForm } from "./auctions/create/auctionForm.jsx"
 export { default as AuctionDetail } from "./auctions/detail/auctionDetail.jsx"
 export { default as NotFound } from "./notfound/NotFound.jsx"
+export { default as Payment } from "./payment/payment.jsx"

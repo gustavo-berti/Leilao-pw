@@ -95,7 +95,7 @@ const auctionDetail = () => {
                         <p><strong>Email do Criador:</strong> {auction.userEmail}</p>
                         <p><strong>Status:</strong> {auction.status}</p>
                         <div>
-                            {user ? <Button label="Dar Lance" icon="pi pi-gavel" onClick={placeBid} /> : <p>Faça login para dar um lance!</p>}
+                            {user ? (auction.status === "OPEN" ? <Button label="Dar Lance" icon="pi pi-gavel" onClick={placeBid} /> : <p>Leilão não está aberto para lances.</p>) : <p>Faça login para dar um lance!</p>}
                         </div>
                         {error && <small className="p-error">{error}</small>}
                     </div>

@@ -76,6 +76,19 @@ const AuctionForm = () => {
     setImages(e.files);
   };
 
+  const handleCancelAuction = async () => {
+    setIsLoading(true);
+    try {
+      formData.status = "CANCELED";
+      await auctionService.update(formData);
+      navigate('/leiloes');
+    } catch (error) {
+      console.error("Erro ao cancelar leilão:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   const handleSubmit = async () => {
     setIsLoading(true);
     setErrors({});
@@ -234,8 +247,14 @@ const AuctionForm = () => {
             <Button className="p-button-danger"
               onClick={() => navigate(-1)}
               disabled={isLoading}
-              label="Cancelar"
+              label="Cancelar Alterações"
             />
+            {isEditMode && (<Button className="p-button-danger"
+              icon="pi pi-trash"
+              onClick={() => handleCancelAuction()}
+              disabled={isLoading}
+              label="Cancelar Leilão"
+            />)}
           </div>
         </div>
       </LongContainer>
